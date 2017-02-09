@@ -9,16 +9,24 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <p>
-        <ul>
-            <li>RegNumber: @Html.TextBox("reg")</li>
-            <li>Color: @Html.TextBox("color")</li>
-            <li>Brand: @Html.TextBox("brand")</li>
-            <li>Model: @Html.TextBox("model")</li>
-        </ul>
-    </p>
+    <div class="container form-container">
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                @Html.Label("Registration")
+                @Html.TextBox("reg", "", new { @class = "form-control" })
+                @Html.Label("Color")
+                @Html.TextBox("color", "", new { @class = "form-control" })
+            </div>
+            <div class="col-sm-6 col-md-4">
+                @Html.Label("Type")
+                @Html.DropDownList("t", EnumHelper.GetSelectList(typeof(Garage2.Models.VehicleType)), "All", new { @class = "form-control" })
+                @Html.Label("Check-in time")
+                <input name="time" type="date" class="form-control">
+            </div>
+        </div>
+        <input type="submit" value="Search" class="btn btn-default search" />
+    </div>
 
-    <input type="submit" value="Search" />
 }
 
 <table class="table ">
@@ -31,15 +39,6 @@
         </th>
         <th>
             @Html.ActionLink(Html.DisplayNameFor(model => model.Color).ToString(), "Index", new { sort = "Color", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Brand).ToString(), "Index", new { sort = "Brand", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Model).ToString(), "Index", new { sort = "Model", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Wheels).ToString(), "Index", new { sort = "Wheels", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
         </th>
         <th>
             @Html.ActionLink(Html.DisplayNameFor(model => model.TimeStamp).ToString(), "Index", new { sort = "TimeStamp", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
@@ -58,15 +57,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Color)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Brand)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Model)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Wheels)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TimeStamp)

@@ -15,7 +15,7 @@ namespace Garage2.Controllers
         private Garage2Context db = new Garage2Context();
 
         // GET: Garage
-        public ActionResult Index(DateTime? time, VehicleType? type,
+        public ActionResult Index(DateTime? time, VehicleType? t,
             int? wheels, string sort, string reg,
             string color, string brand, string model
             )
@@ -23,7 +23,7 @@ namespace Garage2.Controllers
             List<Vehicle> list = db.Vehicles.ToList();
 
             ViewBag.reg = reg;
-            ViewBag.type = type;
+            ViewBag.type = t;
             ViewBag.color = color;
             ViewBag.brand = brand;
             ViewBag.model = model;
@@ -32,15 +32,13 @@ namespace Garage2.Controllers
 
             list = list
                 .Where(x => (!string.IsNullOrWhiteSpace(reg)) ? x.RegNumber.ToLower().Contains(reg.ToLower()) : true)
-                .Where(x => (time != null) ? x.TimeStamp.Equals(time) : true)
-                .Where(x => (type != null) ? x.Type.Equals(x.Type) : true)
+                .Where(x => (time != null) ? x.TimeStamp.Date.Equals(time.Value.Date) : true)
+                .Where(x => (t != null) ? x.Type.Equals(t) : true)
                 .Where(x => (wheels != null) ? x.Wheels.Equals(wheels) : true)
                 .Where(x => (!string.IsNullOrWhiteSpace(color)) ? x.Color.ToLower().Equals(color.ToLower()) : true)
                 .Where(x => (!string.IsNullOrWhiteSpace(brand)) ? x.Brand.ToLower().Equals(brand.ToLower()) : true)
                 .Where(x => (!string.IsNullOrWhiteSpace(model)) ? x.Model.ToLower().Equals(model.ToLower()) : true)
                 .ToList();
-            {
-            }
 
             if (!string.IsNullOrWhiteSpace(sort))
             {
@@ -87,7 +85,6 @@ namespace Garage2.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
             return View(vehicle);
         }
 

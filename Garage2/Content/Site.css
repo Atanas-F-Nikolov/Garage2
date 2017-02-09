@@ -22,3 +22,22 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.search{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+.form-container{
+    transition:all .5s;
+}
+
+tr:nth-child(1){
+    background-color:#d3d3d3;
+    border-bottom:solid 2px #c1c0c0
+    
+}
+
+tr:nth-child(even){
+    background-color:#f1f1f1
+}
