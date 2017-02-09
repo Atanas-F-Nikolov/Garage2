@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using Garage2.DAL;
 using Garage2.Models;
@@ -17,9 +15,10 @@ namespace Garage2.Controllers
         private Garage2Context db = new Garage2Context();
 
         // GET: Garage
-        public ActionResult Index(string sort, string reg,
-                VehicleType? type, string color, string brand,
-                string model, int? wheels, DateTime? time)
+        public ActionResult Index(DateTime? time, VehicleType? type,
+            int? wheels, string sort, string reg,
+            string color, string brand, string model
+            )
         {
             List<Vehicle> list = db.Vehicles.ToList();
 
@@ -31,13 +30,17 @@ namespace Garage2.Controllers
             ViewBag.wheels = wheels;
             ViewBag.time = time;
 
-            if (!string.IsNullOrEmpty(reg)) list = list.Where("RegNumber.ToLower().Contains(@0)", reg.ToLower()).ToList();
-            if (type != null) list = list.Where("Type == (@0)", type).ToList();
-            if (!string.IsNullOrEmpty(color)) list = list.Where("Color == (@0)", color).ToList();
-            if (!string.IsNullOrEmpty(brand)) list = list.Where("Brand == (@0)", brand).ToList();
-            if (!string.IsNullOrEmpty(model)) list = list.Where("Model == (@0)", model).ToList();
-            if (wheels != null) list = list.Where("Wheels == (@0)", wheels).ToList();
-            if (time != null) list = list.Where("TimeStamp == (@0)", time).ToList();
+            list = list
+                .Where(x => (!string.IsNullOrWhiteSpace(reg)) ? x.RegNumber.ToLower().Contains(reg.ToLower()) : true)
+                .Where(x => (time != null) ? x.TimeStamp.Equals(time) : true)
+                .Where(x => (type != null) ? x.Type.Equals(x.Type) : true)
+                .Where(x => (wheels != null) ? x.Wheels.Equals(wheels) : true)
+                .Where(x => (!string.IsNullOrWhiteSpace(color)) ? x.Color.ToLower().Equals(color.ToLower()) : true)
+                .Where(x => (!string.IsNullOrWhiteSpace(brand)) ? x.Brand.ToLower().Equals(brand.ToLower()) : true)
+                .Where(x => (!string.IsNullOrWhiteSpace(model)) ? x.Model.ToLower().Equals(model.ToLower()) : true)
+                .ToList();
+            {
+            }
 
             if (!string.IsNullOrWhiteSpace(sort))
             {
