@@ -8,6 +8,12 @@ namespace Garage2.Models
 {
     public class Vehicle
     {
+
+        public Vehicle()
+        {
+            TimeStamp = DateTime.Now;
+        }
+
         public int Id { get; set; }
         public VehicleType Type { get; set; }
         
@@ -21,6 +27,8 @@ namespace Garage2.Models
         [DisplayName("Number of wheels")]
         public int Wheels { get; set; }
 
+        [DisplayName("Check-in time")]
+        public DateTime TimeStamp { get; set; }
 
     }
 }

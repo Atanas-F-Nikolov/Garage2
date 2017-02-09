@@ -10,7 +10,7 @@ namespace Garage2.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
             ContextKey = "Garage2.DAL.Garage2Context";
         }
 
@@ -32,9 +32,9 @@ namespace Garage2.Migrations
             context.Vehicles.AddOrUpdate(
                 new Vehicle { Type = VehicleType.Car, RegNumber = "CC 1234-SE", Brand = "Volvo", Model = "Shelter9", Wheels = 4, Color = "Green" },
                 new Vehicle { Type = VehicleType.Buss, RegNumber = "BS 1234-SE", Brand = "STHLM Lines", Model = "M87", Wheels = 8, Color = "Red" },
-                new Vehicle { Type = VehicleType.Boat, RegNumber = "B 1234-SE", Brand = "Viking Lines", Model = "B23", Wheels = 0, Color = "Blue" },
-                new Vehicle { Type = VehicleType.Motorcycle, RegNumber = "M 1234-SE", Brand = "Honda", Model = "H746", Wheels = 2, Color = "Red" },
-                new Vehicle { Type = VehicleType.Airplane, RegNumber = "AR 1234-SE", Brand = "SV Lines", Model = "PV45", Wheels = 2, Color = "White" }
+                new Vehicle { Type = VehicleType.Boat, RegNumber = "B 1234-SE", Brand = "Viking Lines", Model = "B23", Wheels = 0, Color = "Blue"},
+                new Vehicle { Type = VehicleType.Motorcycle, RegNumber = "M 1234-SE", Brand = "Honda", Model = "H746", Wheels = 2, Color = "Red"},
+                new Vehicle { Type = VehicleType.Airplane, RegNumber = "AR 1234-SE", Brand = "SV Lines", Model = "PV45", Wheels = 2, Color = "White"}
                 );
         }
     }
