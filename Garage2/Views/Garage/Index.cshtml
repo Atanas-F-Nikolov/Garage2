@@ -19,7 +19,7 @@
             </div>
             <div class="col-sm-6 col-md-4">
                 @Html.Label("Type")
-                @Html.DropDownList("t", EnumHelper.GetSelectList(typeof(Garage2.Models.VehicleType)), "All", new { @class = "form-control" })
+                @Html.DropDownList("type", EnumHelper.GetSelectList(typeof(Garage2.Models.VehicleType)), "All", new { @class = "form-control" })
                 @Html.Label("Check-in time")
                 <input name="time" type="date" class="form-control">
             </div>
