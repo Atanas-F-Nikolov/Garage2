@@ -134,6 +134,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702081550410_InitialCreate.cs" />
+    <Compile Include="Migrations\201702081550410_InitialCreate.Designer.cs">
+      <DependentUpon>201702081550410_InitialCreate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Vehicle.cs" />
     <Compile Include="Models\VehicleType.cs" />
@@ -179,6 +183,7 @@
     <Content Include="Views\Garage\Details.cshtml" />
     <Content Include="Views\Garage\Edit.cshtml" />
     <Content Include="Views\Garage\Index.cshtml" />
+    <Content Include="Views\Garage\OverView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -190,6 +195,11 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201702081550410_InitialCreate.resx">
+      <DependentUpon>201702081550410_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -36,6 +36,11 @@ namespace Garage2.Controllers
             return View(vehicle);
         }
 
+        public ActionResult OverView()
+        {
+            return View(db.Vehicles.ToList());
+        }
+
         // GET: Garage/Create
         public ActionResult Create()
         {
