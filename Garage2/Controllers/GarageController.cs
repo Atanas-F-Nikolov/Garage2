@@ -17,9 +17,19 @@ namespace Garage2.Controllers
         private Garage2Context db = new Garage2Context();
 
         // GET: Garage
-        public ActionResult Index()
+        public ActionResult Index(string sort)
         {
-            return View(db.Vehicles.ToList());
+            List<Vehicle> list = db.Vehicles.ToList();
+
+            if (!string.IsNullOrWhiteSpace(sort))
+            {
+                list = list.OrderBy(sort).ToList();
+            }
+            else
+            {
+                list = list.OrderByDescending(x => x.Id).ToList();
+            }
+            return View(list);
         }
 
         // GET: Garage/Details/5
@@ -35,17 +45,6 @@ namespace Garage2.Controllers
                 return HttpNotFound();
             }
             return View(vehicle);
-        }
-
-        public ActionResult OverView(string sort)
-        {
-            List<Vehicle> list = db.Vehicles.ToList();
-
-            if (!string.IsNullOrWhiteSpace(sort))
-            {
-                list = list.OrderBy(sort).ToList();
-            }
-            return View(list);
         }
 
         // GET: Garage/Create

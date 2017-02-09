@@ -187,7 +187,6 @@
     <Content Include="Views\Garage\Details.cshtml" />
     <Content Include="Views\Garage\Edit.cshtml" />
     <Content Include="Views\Garage\Index.cshtml" />
-    <Content Include="Views\Garage\OverView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
