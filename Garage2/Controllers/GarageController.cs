@@ -17,9 +17,27 @@ namespace Garage2.Controllers
         private Garage2Context db = new Garage2Context();
 
         // GET: Garage
-        public ActionResult Index(string sort)
+        public ActionResult Index(string sort, string reg,
+                VehicleType? type, string color, string brand,
+                string model, int? wheels, DateTime? time)
         {
             List<Vehicle> list = db.Vehicles.ToList();
+
+            ViewBag.reg = reg;
+            ViewBag.type = type;
+            ViewBag.color = color;
+            ViewBag.brand = brand;
+            ViewBag.model = model;
+            ViewBag.wheels = wheels;
+            ViewBag.time = time;
+
+            if (!string.IsNullOrEmpty(reg)) list = list.Where("RegNumber.ToLower().Contains(@0)", reg.ToLower()).ToList();
+            if (type != null) list = list.Where("Type == (@0)", type).ToList();
+            if (!string.IsNullOrEmpty(color)) list = list.Where("Color == (@0)", color).ToList();
+            if (!string.IsNullOrEmpty(brand)) list = list.Where("Brand == (@0)", brand).ToList();
+            if (!string.IsNullOrEmpty(model)) list = list.Where("Model == (@0)", model).ToList();
+            if (wheels != null) list = list.Where("Wheels == (@0)", wheels).ToList();
+            if (time != null) list = list.Where("TimeStamp == (@0)", time).ToList();
 
             if (!string.IsNullOrWhiteSpace(sort))
             {

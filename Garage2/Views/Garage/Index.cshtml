@@ -6,28 +6,43 @@
 
 <h2>OverView</h2>
 
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <p>
+        <ul>
+            <li>RegNumber: @Html.TextBox("reg")</li>
+            <li>Color: @Html.TextBox("color")</li>
+            <li>Brand: @Html.TextBox("brand")</li>
+            <li>Model: @Html.TextBox("model")</li>
+        </ul>
+    </p>
+    <input type="submit" value="Search" />
+}
+
 <table class="table ">
     <tr>
         <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Type).ToString(), "Index", new { sort = "Type" })
+            @Html.ActionLink(Html.DisplayNameFor(model => model.Type).ToString(), "Index", new { sort = "Type", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
         </th>
         <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.RegNumber).ToString(), "Index", new { sort = "RegNumber" })
+            @Html.ActionLink(Html.DisplayNameFor(model => model.RegNumber).ToString(), "Index", new { sort = "RegNumber", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
         </th>
         <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Color).ToString(), "Index", new { sort = "Color" })
+            @Html.ActionLink(Html.DisplayNameFor(model => model.Color).ToString(), "Index", new { sort = "Color", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
         </th>
         <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Brand).ToString(), "Index", new { sort = "Brand" })
+            @Html.ActionLink(Html.DisplayNameFor(model => model.Brand).ToString(), "Index", new { sort = "Brand", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
         </th>
         <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Model).ToString(), "Index", new { sort = "Model" })
+            @Html.ActionLink(Html.DisplayNameFor(model => model.Model).ToString(), "Index", new { sort = "Model", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
         </th>
         <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Wheels).ToString(), "Index", new { sort = "Wheels" })
+            @Html.ActionLink(Html.DisplayNameFor(model => model.Wheels).ToString(), "Index", new { sort = "Wheels", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
         </th>
         <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.TimeStamp).ToString(), "Index", new { sort = "TimeStamp" })
+            @Html.ActionLink(Html.DisplayNameFor(model => model.TimeStamp).ToString(), "Index", new { sort = "TimeStamp", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
         </th>
         <th></th>
     </tr>
