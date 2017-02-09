@@ -1,13 +1,16 @@
 ﻿@model Garage2.Models.Vehicle
 
-@{
-    ViewBag.Title = "Check-out";
+@{ 
+    double pricePerHour = 100;
+    var checkOutTimeStamp = DateTime.Now;
+    var parkingPeriod = checkOutTimeStamp.Subtract(Model.TimeStamp); // TimeStamp => checkInTimeStamp
+    var totalPeriodInMin = Math.Round(parkingPeriod.TotalMinutes);
+    var totalPrice = Math.Ceiling((pricePerHour / 60) * totalPeriodInMin);
 }
 
-<h2>Check-out</h2>
-
-<h3>Are you sure you want to check-out this vehicle?</h3>
 <div>
+    <h2>Receipt</h2>
+    <h4>Garage price: @pricePerHour kr / hour</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -57,15 +60,42 @@
         <dd>
             @Html.DisplayFor(model => model.Wheels)
         </dd>
+        
+   @*Additional info*@
+        <dt>
+            @Html.DisplayNameFor(model => model.TimeStamp)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TimeStamp)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Check-out time")
+        </dt>
+
+        <dd>
+            @checkOutTimeStamp
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Total duration")
+        </dt>
+
+        <dd>
+            @totalPeriodInMin min
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Total Price")
+        </dt>
+
+        <dd>
+            @totalPrice kr
+        </dd>
 
     </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Check-out" class="btn btn-default" /> |
-            @Html.ActionLink("Back to Vehicle List", "Index")
-        </div>
-    }
 </div>
+<p>
+    @Html.ActionLink("Back to Vehicle List", "Index")
+</p>
