@@ -8,7 +8,6 @@ namespace Garage2.Models
 {
     public class Vehicle
     {
-
         public Vehicle()
         {
             TimeStamp = DateTime.Now;

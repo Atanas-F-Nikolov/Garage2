@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Garage2.DAL;
 using Garage2.Models;
+using System.Linq.Dynamic;
 
 namespace Garage2.Controllers
 {
@@ -36,9 +37,15 @@ namespace Garage2.Controllers
             return View(vehicle);
         }
 
-        public ActionResult OverView()
+        public ActionResult OverView(string sort)
         {
-            return View(db.Vehicles.ToList());
+            List<Vehicle> list = db.Vehicles.ToList();
+
+            if (!string.IsNullOrWhiteSpace(sort))
+            {
+                list = list.OrderBy(sort).ToList();
+            }
+            return View(list);
         }
 
         // GET: Garage/Create
