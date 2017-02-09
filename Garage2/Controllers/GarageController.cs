@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using Garage2.DAL;
 using Garage2.Models;
@@ -17,9 +15,32 @@ namespace Garage2.Controllers
         private Garage2Context db = new Garage2Context();
 
         // GET: Garage
-        public ActionResult Index(string sort)
+        public ActionResult Index(DateTime? time, VehicleType? type,
+            int? wheels, string sort, string reg,
+            string color, string brand, string model
+            )
         {
             List<Vehicle> list = db.Vehicles.ToList();
+
+            ViewBag.reg = reg;
+            ViewBag.type = type;
+            ViewBag.color = color;
+            ViewBag.brand = brand;
+            ViewBag.model = model;
+            ViewBag.wheels = wheels;
+            ViewBag.time = time;
+
+            list = list
+                .Where(x => (!string.IsNullOrWhiteSpace(reg)) ? x.RegNumber.ToLower().Contains(reg.ToLower()) : true)
+                .Where(x => (time != null) ? x.TimeStamp.Equals(time) : true)
+                .Where(x => (type != null) ? x.Type.Equals(x.Type) : true)
+                .Where(x => (wheels != null) ? x.Wheels.Equals(wheels) : true)
+                .Where(x => (!string.IsNullOrWhiteSpace(color)) ? x.Color.ToLower().Equals(color.ToLower()) : true)
+                .Where(x => (!string.IsNullOrWhiteSpace(brand)) ? x.Brand.ToLower().Equals(brand.ToLower()) : true)
+                .Where(x => (!string.IsNullOrWhiteSpace(model)) ? x.Model.ToLower().Equals(model.ToLower()) : true)
+                .ToList();
+            {
+            }
 
             if (!string.IsNullOrWhiteSpace(sort))
             {
