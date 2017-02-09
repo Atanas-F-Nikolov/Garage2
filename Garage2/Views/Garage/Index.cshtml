@@ -21,7 +21,7 @@
                 @Html.Label("Type")
                 @Html.DropDownList("type", EnumHelper.GetSelectList(typeof(Garage2.Models.VehicleType)), "All", new { @class = "form-control" })
                 @Html.Label("Check-in time")
-                <input name="time" type="date" class="form-control">
+                <input name="time" type="date" class="form-control" value=@ViewBag.time>
             </div>
         </div>
         <input type="submit" value="Search" class="btn btn-default search" />
