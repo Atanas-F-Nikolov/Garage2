@@ -81,13 +81,19 @@ namespace Garage2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Type,RegNumber,Color,Brand,Model,Wheels")] Vehicle vehicle)
         {
-            if (ModelState.IsValid)
+            List<string> regNumberslist = db.Vehicles.Select(x => x.RegNumber.ToLower()).ToList();
+            if (!regNumberslist.Contains(vehicle.RegNumber.ToLower()))
             {
-                db.Vehicles.Add(vehicle);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Vehicles.Add(vehicle);
+                    db.SaveChanges();
+                    ViewBag.regNErrorMessage = "";
+                    return RedirectToAction("Index");
+                }
             }
 
+            ViewBag.regNErrorMessage = "There is such a Registration Number in DB!";
             return View(vehicle);
         }
 
@@ -112,10 +118,19 @@ namespace Garage2.Controllers
         public ActionResult Receipt(int id)
         {
             Vehicle vehicle = db.Vehicles.Find(id);
-            //db.Vehicles.Remove(vehicle);
-            //db.SaveChanges();
-            return View("Receipt", vehicle);
+            Receipt receipt = new Receipt();
+            receipt.vehicle = vehicle;
+            receipt.PricePerHour = 100;
+            var parkingPeriod = receipt.checkOutTimeStamp.Subtract(vehicle.TimeStamp);
+            receipt.ParkingPeriodInMin = Math.Round(parkingPeriod.TotalMinutes);
+            receipt.TotalPrice= Math.Ceiling((receipt.PricePerHour / 60) * receipt.ParkingPeriodInMin);
+
+            db.Vehicles.Remove(vehicle);
+            db.SaveChanges();
+
+            return View("Receipt", receipt);
         }
+
 
 
         protected override void Dispose(bool disposing)
