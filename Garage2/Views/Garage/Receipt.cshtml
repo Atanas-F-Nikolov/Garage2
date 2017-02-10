@@ -1,97 +1,89 @@
-﻿@model Garage2.Models.Vehicle
-
-@{ 
-    double pricePerHour = 100;
-    var checkOutTimeStamp = DateTime.Now;
-    var parkingPeriod = checkOutTimeStamp.Subtract(Model.TimeStamp); // TimeStamp => checkInTimeStamp
-    var totalPeriodInMin = Math.Round(parkingPeriod.TotalMinutes);
-    var totalPrice = Math.Ceiling((pricePerHour / 60) * totalPeriodInMin);
-}
+﻿@model Garage2.Models.Receipt
 
 <div>
     <h2>Receipt</h2>
-    <h4>Garage price: @pricePerHour kr / hour</h4>
+    <h4>Garage price: @Html.DisplayFor(model => model.PricePerHour) kr / hour</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Type)
+            @Html.DisplayNameFor(model => model.vehicle.Type)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Type)
+            @Html.DisplayFor(model => model.vehicle.Type)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.RegNumber)
+            @Html.DisplayNameFor(model => model.vehicle.RegNumber)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.RegNumber)
+            @Html.DisplayFor(model => model.vehicle.RegNumber)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Color)
+            @Html.DisplayNameFor(model => model.vehicle.Color)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Color)
+            @Html.DisplayFor(model => model.vehicle.Color)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Brand)
+            @Html.DisplayNameFor(model => model.vehicle.Brand)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Brand)
+            @Html.DisplayFor(model => model.vehicle.Brand)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Model)
+            @Html.DisplayNameFor(model => model.vehicle.Model)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Model)
+            @Html.DisplayFor(model => model.vehicle.Model)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Wheels)
+            @Html.DisplayNameFor(model => model.vehicle.Wheels)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Wheels)
+            @Html.DisplayFor(model => model.vehicle.Wheels)
         </dd>
         
    @*Additional info*@
         <dt>
-            @Html.DisplayNameFor(model => model.TimeStamp)
+            @Html.DisplayNameFor(model => model.vehicle.TimeStamp)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.TimeStamp)
+            @Html.DisplayFor(model => model.vehicle.TimeStamp)
         </dd>
 
         <dt>
-            @Html.DisplayName("Check-out time")
+            @Html.DisplayNameFor(model => model.checkOutTimeStamp)
         </dt>
 
         <dd>
-            @checkOutTimeStamp
+            @Html.DisplayFor(model => model.checkOutTimeStamp)
         </dd>
 
         <dt>
-            @Html.DisplayName("Total duration")
+            @Html.DisplayNameFor(model => model.ParkingPeriodInMin)
         </dt>
 
         <dd>
-            @totalPeriodInMin min
+            @Html.DisplayFor(model => model.ParkingPeriodInMin) min
         </dd>
 
         <dt>
-            @Html.DisplayName("Total Price")
+            @Html.DisplayNameFor(model => model.TotalPrice)
         </dt>
 
         <dd>
-            @totalPrice kr
+            @Html.DisplayFor(model => model.TotalPrice) kr
         </dd>
 
     </dl>

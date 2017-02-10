@@ -57,17 +57,10 @@ namespace Garage2.Controllers
             int? wheels, string sort, string reg,
             string color, string brand, string model)
         {
-            return RedirectToActionPermanent("Index", new
-            {
-                time = time,
-                type = type,
-                wheels = wheels,
-                sort = sort,
-                reg = reg,
-                color = color,
-                brand = brand,
-                model = model,
-                msg = "Select vehicle to check-out"
+            return RedirectToActionPermanent("Index", new {
+                time = time, type = type, wheels = wheels,
+                sort = sort, reg = reg, color = color,
+                brand = brand, model = model, msg = "Select vehicle to check-out"
             });
         }
 
@@ -135,17 +128,22 @@ namespace Garage2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Type,RegNumber,Color,Brand,Model,Wheels")] Vehicle vehicle)
         {
-            if (ModelState.IsValid)
+            List<string> regNumberslist = db.Vehicles.Select(x => x.RegNumber.ToLower()).ToList();
+            if (!regNumberslist.Contains(vehicle.RegNumber.ToLower()))
             {
-                var parking = getParkingSpace(2);
-                if (parking != -1)
+                if (ModelState.IsValid)
                 {
-                    vehicle.ParkingSpace = parking;
-                    db.Vehicles.Add(vehicle);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
+                    var parking = getParkingSpace(2);
+                    if (parking != -1)
+                    {
+                        vehicle.ParkingSpace = parking;
+                        db.Vehicles.Add(vehicle);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
                 }
             }
+            ViewBag.regNErrorMessage = "There is such a Registration Number in DB!";
             return View(vehicle);
         }
 
@@ -170,10 +168,19 @@ namespace Garage2.Controllers
         public ActionResult Receipt(int id)
         {
             Vehicle vehicle = db.Vehicles.Find(id);
-            //db.Vehicles.Remove(vehicle);
-            //db.SaveChanges();
-            return View("Receipt", vehicle);
+            Receipt receipt = new Receipt();
+            receipt.vehicle = vehicle;
+            receipt.PricePerHour = 100;
+            var parkingPeriod = receipt.checkOutTimeStamp.Subtract(vehicle.TimeStamp);
+            receipt.ParkingPeriodInMin = Math.Round(parkingPeriod.TotalMinutes);
+            receipt.TotalPrice= Math.Ceiling((receipt.PricePerHour / 60) * receipt.ParkingPeriodInMin);
+
+            db.Vehicles.Remove(vehicle);
+            db.SaveChanges();
+
+            return View("Receipt", receipt);
         }
+
 
 
         protected override void Dispose(bool disposing)
