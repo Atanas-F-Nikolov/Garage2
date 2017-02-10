@@ -2,9 +2,10 @@
 
 @{
     ViewBag.Title = "Index";
+    var count = 0;
 }
 
-<h2>OverView</h2>
+<h2>@ViewBag.Message</h2>
 
 @using (Html.BeginForm())
 {
@@ -24,47 +25,77 @@
                 <input name="time" type="date" class="form-control" value=@ViewBag.time>
             </div>
         </div>
-        <input type="submit" value="Search" class="btn btn-default search" />
+        <div class="btn-group search">
+            <input type="submit" name="search" value="Search" class="btn btn-default" />
+            <input type="submit" value="Show all" class="btn btn-default" />
+        </div>
     </div>
-
 }
-
-<table class="table ">
-    <tr>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Type).ToString(), "Index", new { sort = "Type", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.RegNumber).ToString(), "Index", new { sort = "RegNumber", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Color).ToString(), "Index", new { sort = "Color", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.TimeStamp).ToString(), "Index", new { sort = "TimeStamp", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-            {
+@if (Model.Count() > 0)
+{
+    <table id="detailsTable" class="table ">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Color)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TimeStamp)
-            </td>
-            <td>
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Check-out", "Delete", new { id = item.Id })
-            </td>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Type).ToString(), "Index", new { sort = "Type", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.RegNumber).ToString(), "Index", new { sort = "RegNumber", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Color).ToString(), "Index", new { sort = "Color", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.TimeStamp).ToString(), "Index", new { sort = "TimeStamp", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
+            </th>
+            <th></th>
         </tr>
-    }
-</table>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RegNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Color)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeStamp)
+                </td>
+                <td>
+                    <p class="details-btn details-control">Details</p> |
+                    @Html.ActionLink("Check-out", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+            <tr class="hidden">
+                <td colspan="10">
+                    <table class="details" cellpadding="10" cellspacing="0" border="0">
+                        <tr>
+                            <th>@Html.DisplayNameFor(Model => Model.Model)</th>
+                            <th>@Html.DisplayNameFor(Model => Model.Brand)</th>
+                            <th>@Html.DisplayNameFor(Model => Model.Wheels)</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayFor(x => item.Model)</td>
+                            <td>@Html.DisplayFor(x => item.Brand)</td>
+                            <td class="wheels">@Html.DisplayFor(x => item.Wheels)</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <h3>Could not find any vehicles that matched your search</h3>
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/details.js"></script>
