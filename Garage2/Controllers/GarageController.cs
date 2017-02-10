@@ -17,10 +17,10 @@ namespace Garage2.Controllers
         // GET: Garage
         public ActionResult Index(DateTime? time, VehicleType? type,
             int? wheels, string sort, string reg,
-            string color, string brand, string model
-            )
+            string color, string brand, string model, string msg)
         {
-            ViewBag.Message = "List of vehicles";
+
+            ViewBag.Message = (string.IsNullOrWhiteSpace(msg)) ? "List of vehicles" : msg;
             List<Vehicle> list = db.Vehicles.ToList();
 
             if (Request.Form["search"] != null)
@@ -51,6 +51,17 @@ namespace Garage2.Controllers
             if (!string.IsNullOrWhiteSpace(sort)) { list = list.OrderBy(sort).ToList(); }
             else { list = list.OrderByDescending(x => x.Id).ToList(); }
             return View(list);
+        }
+
+        public ActionResult CheckOut(DateTime? time, VehicleType? type,
+            int? wheels, string sort, string reg,
+            string color, string brand, string model)
+        {
+            return RedirectToActionPermanent("Index", new {
+                time = time, type = type, wheels = wheels,
+                sort = sort, reg = reg, color = color,
+                brand = brand, model = model, msg = "Select vehicle to check-out"
+            });
         }
 
         // GET: Garage/Details/5
