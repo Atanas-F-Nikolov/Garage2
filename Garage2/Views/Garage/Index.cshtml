@@ -33,8 +33,11 @@
 }
 @if (Model.Count() > 0)
 {
-    <table id="detailsTable" class="table ">
+    <table id="detailsTable" class="table table-responsive">
         <tr>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.ParkingSpace).ToString(), "Index", new { sort = "ParkingSpace", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
+            </th>
             <th>
                 @Html.ActionLink(Html.DisplayNameFor(model => model.Type).ToString(), "Index", new { sort = "Type", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
             </th>
@@ -53,6 +56,9 @@
         @foreach (var item in Model)
         {
             <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParkingSpace)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Type)
                 </td>

@@ -57,10 +57,17 @@ namespace Garage2.Controllers
             int? wheels, string sort, string reg,
             string color, string brand, string model)
         {
-            return RedirectToActionPermanent("Index", new {
-                time = time, type = type, wheels = wheels,
-                sort = sort, reg = reg, color = color,
-                brand = brand, model = model, msg = "Select vehicle to check-out"
+            return RedirectToActionPermanent("Index", new
+            {
+                time = time,
+                type = type,
+                wheels = wheels,
+                sort = sort,
+                reg = reg,
+                color = color,
+                brand = brand,
+                model = model,
+                msg = "Select vehicle to check-out"
             });
         }
 
@@ -85,6 +92,42 @@ namespace Garage2.Controllers
             return View();
         }
 
+        private int garageSize = 30;
+
+        private int getParkingSpace(int size)
+        {
+            var spaces = db.Vehicles.Select(x => new
+            {
+                space = x.ParkingSpace,
+                size = x.Size
+            }).OrderBy(x => x.space).ToList();
+
+            var currentSpace = 1;
+
+            int[] requiredSpaces = new int[size];
+            int[] testSpaces;
+            foreach (var item in spaces)
+            {
+                for (int i = 0; i < size; i++)
+                {
+                    requiredSpaces[i] = currentSpace + i;
+                }
+                testSpaces = new int[item.size];
+                for (int i = 0; i < item.size; i++)
+                {
+                    testSpaces[i] = item.space + i;
+                }
+
+                if (requiredSpaces.Any(x => testSpaces.Contains(x)))
+                {
+                    currentSpace = (item.space + item.size);
+                    if (currentSpace > garageSize) return -1;
+                }
+                else break;
+            }
+            return currentSpace;
+        }
+
         // POST: Garage/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -92,12 +135,16 @@ namespace Garage2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Type,RegNumber,Color,Brand,Model,Wheels")] Vehicle vehicle)
         {
-            
             if (ModelState.IsValid)
             {
-                db.Vehicles.Add(vehicle);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var parking = getParkingSpace(2);
+                if (parking != -1)
+                {
+                    vehicle.ParkingSpace = parking;
+                    db.Vehicles.Add(vehicle);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
             return View(vehicle);
         }

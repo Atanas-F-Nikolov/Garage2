@@ -15,7 +15,11 @@ namespace Garage2.Models
 
         public int Id { get; set; }
         public VehicleType Type { get; set; }
-        
+
+        [DisplayName("Parking space")]
+        public int ParkingSpace { get; set; }
+        public int Size { get; set; }
+
         [DisplayName("Registration number")]
         public string RegNumber { get; set; }
         
