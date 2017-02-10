@@ -22,3 +22,55 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.search{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+.form-container{
+    transition:all .5s;
+}
+
+tr:nth-child(1){
+    background-color:#d3d3d3;
+    border-bottom:solid 2px #c1c0c0
+    
+}
+tr:nth-child(2n){
+    background-color:#fafafa
+}
+
+tr:nth-child(4n){
+    background-color:#ebebeb
+}
+
+.details{
+    background-color:white;
+}
+
+.details tr{
+    width:100%;
+    background-color:white;
+    border-bottom:solid 1px #dddddd;
+    border-top:solid 1px #dddddd;
+}
+
+.details tr th{
+    color:black;
+    text-align:center
+}
+
+.wheels{
+    text-align:center;
+}
+
+.details-btn{
+    display:inline;
+    color:#428bca;
+}
+
+.details-btn:hover{
+    color:#2a6496;
+    text-decoration:underline;
+}

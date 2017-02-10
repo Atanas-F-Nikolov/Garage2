@@ -17,40 +17,51 @@ namespace Garage2.Controllers
         // GET: Garage
         public ActionResult Index(DateTime? time, VehicleType? type,
             int? wheels, string sort, string reg,
-            string color, string brand, string model
-            )
+            string color, string brand, string model, string msg)
         {
+
+            ViewBag.Message = (string.IsNullOrWhiteSpace(msg)) ? "List of vehicles" : msg;
             List<Vehicle> list = db.Vehicles.ToList();
 
-            ViewBag.reg = reg;
-            ViewBag.type = type;
-            ViewBag.color = color;
-            ViewBag.brand = brand;
-            ViewBag.model = model;
-            ViewBag.wheels = wheels;
-            ViewBag.time = time;
-
-            list = list
-                .Where(x => (!string.IsNullOrWhiteSpace(reg)) ? x.RegNumber.ToLower().Contains(reg.ToLower()) : true)
-                .Where(x => (time != null) ? x.TimeStamp.Equals(time) : true)
-                .Where(x => (type != null) ? x.Type.Equals(x.Type) : true)
-                .Where(x => (wheels != null) ? x.Wheels.Equals(wheels) : true)
-                .Where(x => (!string.IsNullOrWhiteSpace(color)) ? x.Color.ToLower().Equals(color.ToLower()) : true)
-                .Where(x => (!string.IsNullOrWhiteSpace(brand)) ? x.Brand.ToLower().Equals(brand.ToLower()) : true)
-                .Where(x => (!string.IsNullOrWhiteSpace(model)) ? x.Model.ToLower().Equals(model.ToLower()) : true)
-                .ToList();
+            if (Request.Form["search"] != null)
             {
-            }
+                ViewBag.reg = reg;
+                ViewBag.type = type;
+                ViewBag.color = color;
+                ViewBag.brand = brand;
+                ViewBag.model = model;
+                ViewBag.wheels = wheels;
+                ViewBag.time = time;
 
-            if (!string.IsNullOrWhiteSpace(sort))
-            {
-                list = list.OrderBy(sort).ToList();
+                list = list
+                    .Where(x => (!string.IsNullOrWhiteSpace(reg)) ? x.RegNumber.ToLower().Contains(reg.ToLower()) : true)
+                    .Where(x => (time != null) ? x.TimeStamp.Date.Equals(time.Value.Date) : true)
+                    .Where(x => (type != null) ? x.Type.Equals(type) : true)
+                    .Where(x => (wheels != null) ? x.Wheels.Equals(wheels) : true)
+                    .Where(x => (!string.IsNullOrWhiteSpace(color)) ? x.Color.ToLower().Equals(color.ToLower()) : true)
+                    .Where(x => (!string.IsNullOrWhiteSpace(brand)) ? x.Brand.ToLower().Equals(brand.ToLower()) : true)
+                    .Where(x => (!string.IsNullOrWhiteSpace(model)) ? x.Model.ToLower().Equals(model.ToLower()) : true)
+                    .ToList();
             }
             else
             {
-                list = list.OrderByDescending(x => x.Id).ToList();
+                ModelState.Clear();
             }
+
+            if (!string.IsNullOrWhiteSpace(sort)) { list = list.OrderBy(sort).ToList(); }
+            else { list = list.OrderByDescending(x => x.Id).ToList(); }
             return View(list);
+        }
+
+        public ActionResult CheckOut(DateTime? time, VehicleType? type,
+            int? wheels, string sort, string reg,
+            string color, string brand, string model)
+        {
+            return RedirectToActionPermanent("Index", new {
+                time = time, type = type, wheels = wheels,
+                sort = sort, reg = reg, color = color,
+                brand = brand, model = model, msg = "Select vehicle to check-out"
+            });
         }
 
         // GET: Garage/Details/5
