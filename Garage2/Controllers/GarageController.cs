@@ -21,6 +21,7 @@ namespace Garage2.Controllers
         {
 
             ViewBag.Message = (string.IsNullOrWhiteSpace(msg)) ? "List of vehicles" : msg;
+            
             List<Vehicle> list = db.Vehicles.ToList();
 
             if (Request.Form["search"] != null)
@@ -57,10 +58,17 @@ namespace Garage2.Controllers
             int? wheels, string sort, string reg,
             string color, string brand, string model)
         {
-            return RedirectToActionPermanent("Index", new {
-                time = time, type = type, wheels = wheels,
-                sort = sort, reg = reg, color = color,
-                brand = brand, model = model, msg = "Select vehicle to check-out"
+            return RedirectToActionPermanent("Index", new
+            {
+                time = time,
+                type = type,
+                wheels = wheels,
+                sort = sort,
+                reg = reg,
+                color = color,
+                brand = brand,
+                model = model,
+                msg = "Select vehicle to check-out"
             });
         }
 
@@ -87,13 +95,29 @@ namespace Garage2.Controllers
 
         private int garageSize = 30;
 
-        private int getParkingSpace(int size)
+        private int GetParkingSpaceForMotorCycle()
+        {
+            var spaces = db.Vehicles.Where(x => x.Type == VehicleType.Motorcycle)
+                .GroupBy(g => g.ParkingSpace)
+                .Select(y => new { Space = y.Key, Count = y.Count() }).ToList();
+
+            foreach (var parkingSpace in spaces)
+            {
+                if (parkingSpace.Count < 3)
+                {
+                    return parkingSpace.Space;
+                }
+            }
+            return GetParkingSpace(1);
+        }
+
+        private int GetParkingSpace(int size)
         {
             var spaces = db.Vehicles.Select(x => new
             {
                 space = x.ParkingSpace,
                 size = x.Size
-            }).OrderBy(x => x.space).ToList();
+            }).Distinct().OrderBy(x => x.space).ToList();
 
             var currentSpace = 1;
 
@@ -133,13 +157,33 @@ namespace Garage2.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var parking = getParkingSpace(2);
+                    switch (vehicle.Type)
+                    {
+                        case VehicleType.Airplane:
+                            vehicle.Size = 3;
+                            break;
+                        case VehicleType.Boat:
+                            vehicle.Size = 3;
+                            break;
+                        case VehicleType.Buss:
+                            vehicle.Size = 2;
+                            break;
+                        case VehicleType.Car:
+                            vehicle.Size = 1;
+                            break;
+                        case VehicleType.Motorcycle:
+                            vehicle.Size = 1;
+                            break;
+                    }
+
+                    var parking = (vehicle.Type == VehicleType.Motorcycle) ? GetParkingSpaceForMotorCycle() : GetParkingSpace(vehicle.Size);
+
                     if (parking != -1)
                     {
                         vehicle.ParkingSpace = parking;
                         db.Vehicles.Add(vehicle);
                         db.SaveChanges();
-                        return RedirectToAction("Index");
+                        return RedirectToAction("Index", new { msg = $"List of vehicles - Your {vehicle.Type} has been parked successfully" });
                     }
                 }
             }
@@ -173,15 +217,13 @@ namespace Garage2.Controllers
             receipt.PricePerHour = 100;
             var parkingPeriod = receipt.checkOutTimeStamp.Subtract(vehicle.TimeStamp);
             receipt.ParkingPeriodInMin = Math.Round(parkingPeriod.TotalMinutes);
-            receipt.TotalPrice= Math.Ceiling((receipt.PricePerHour / 60) * receipt.ParkingPeriodInMin);
+            receipt.TotalPrice = Math.Ceiling((receipt.PricePerHour / 60) * receipt.ParkingPeriodInMin);
 
             db.Vehicles.Remove(vehicle);
             db.SaveChanges();
 
             return View("Receipt", receipt);
         }
-
-
 
         protected override void Dispose(bool disposing)
         {
