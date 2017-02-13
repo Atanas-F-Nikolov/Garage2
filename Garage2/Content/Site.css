@@ -73,4 +73,5 @@ tr:nth-child(4n) {
     .details-btn:hover {
         color: #2a6496;
         text-decoration: underline;
+        cursor: pointer;
     }

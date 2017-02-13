@@ -21,33 +21,34 @@ namespace Garage2.Controllers
         {
 
             ViewBag.Message = (string.IsNullOrWhiteSpace(msg)) ? "List of vehicles" : msg;
-            
+
             List<Vehicle> list = db.Vehicles.ToList();
 
-            if (Request.Form["search"] != null)
-            {
-                ViewBag.reg = reg;
-                ViewBag.type = type;
-                ViewBag.color = color;
-                ViewBag.brand = brand;
-                ViewBag.model = model;
-                ViewBag.wheels = wheels;
-                ViewBag.time = time;
-
-                list = list
-                    .Where(x => (!string.IsNullOrWhiteSpace(reg)) ? x.RegNumber.ToLower().Contains(reg.ToLower()) : true)
-                    .Where(x => (time != null) ? x.TimeStamp.Date.Equals(time.Value.Date) : true)
-                    .Where(x => (type != null) ? x.Type.Equals(type) : true)
-                    .Where(x => (wheels != null) ? x.Wheels.Equals(wheels) : true)
-                    .Where(x => (!string.IsNullOrWhiteSpace(color)) ? x.Color.ToLower().Equals(color.ToLower()) : true)
-                    .Where(x => (!string.IsNullOrWhiteSpace(brand)) ? x.Brand.ToLower().Equals(brand.ToLower()) : true)
-                    .Where(x => (!string.IsNullOrWhiteSpace(model)) ? x.Model.ToLower().Equals(model.ToLower()) : true)
-                    .ToList();
-            }
-            else
+            if (Request.Form["show"] != null)
             {
                 ModelState.Clear();
+                if (!string.IsNullOrWhiteSpace(sort)) { list = list.OrderBy(sort).ToList(); }
+                else { list = list.OrderByDescending(x => x.Id).ToList(); }
+                return View(list);
             }
+
+            ViewBag.reg = reg;
+            ViewBag.type = type;
+            ViewBag.color = color;
+            ViewBag.brand = brand;
+            ViewBag.model = model;
+            ViewBag.wheels = wheels;
+            ViewBag.time = time;
+
+            list = list
+                .Where(x => (!string.IsNullOrWhiteSpace(reg)) ? x.RegNumber.ToLower().Contains(reg.ToLower()) : true)
+                .Where(x => (time != null) ? x.TimeStamp.Date.Equals(time.Value.Date) : true)
+                .Where(x => (type != null) ? x.Type.Equals(type) : true)
+                .Where(x => (wheels != null) ? x.Wheels.Equals(wheels) : true)
+                .Where(x => (!string.IsNullOrWhiteSpace(color)) ? x.Color.ToLower().Equals(color.ToLower()) : true)
+                .Where(x => (!string.IsNullOrWhiteSpace(brand)) ? x.Brand.ToLower().Equals(brand.ToLower()) : true)
+                .Where(x => (!string.IsNullOrWhiteSpace(model)) ? x.Model.ToLower().Equals(model.ToLower()) : true)
+                .ToList();
 
             if (!string.IsNullOrWhiteSpace(sort)) { list = list.OrderBy(sort).ToList(); }
             else { list = list.OrderByDescending(x => x.Id).ToList(); }
