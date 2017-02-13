@@ -2,7 +2,11 @@
 
 @{
     ViewBag.Title = "Index";
-    bool show = true;
+    bool show = false;
+    if (ViewBag.added != null)
+    {
+        show = (bool)ViewBag.added;
+    }
 }
 
 <h2>@ViewBag.msg</h2>
@@ -55,7 +59,7 @@
 
         @foreach (var item in Model)
         {
-            if (show && ViewBag.added == true)
+            if (show)
             {
                 <tr class="success">
                     <td>
@@ -81,28 +85,30 @@
 
                 show = false;
             }
-
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ParkingSpace)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Type)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RegNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Color)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TimeStamp)
-                </td>
-                <td>
-                    <p class="details-btn details-control">Details</p> |
-                    @Html.ActionLink("Check-out", "Delete", new { id = item.Id })
-                </td>
-            </tr>
+            else
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ParkingSpace)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RegNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Color)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimeStamp)
+                    </td>
+                    <td>
+                        <p class="details-btn details-control">Details</p> |
+                        @Html.ActionLink("Check-out", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
             <tr class="hidden">
                 <td colspan="10">
                     <table class="details" cellpadding="10" cellspacing="0" border="0">

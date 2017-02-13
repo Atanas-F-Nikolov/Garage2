@@ -20,35 +20,39 @@ namespace Garage2.Controllers
             int? wheels, string sort, string reg,
             string color, string brand, string model, string msg = "")
         {
-
             List<Vehicle> list = db.Vehicles.ToList();
 
-            ViewBag.msg = (string.IsNullOrWhiteSpace(msg)) ? "List of vehicles" : msg;
+            if (Request.Form["search"] != null)
+            {
+                if (!string.IsNullOrWhiteSpace(msg))
+                {
+                    msg = (msg.Contains("Your") ? msg.Substring(0, msg.IndexOf("-")) : msg);
+                }
+            }
 
             if (Request.Form["show"] != null)
             {
                 ModelState.Clear();
-                if (!string.IsNullOrWhiteSpace(sort))
+                list = SortList(sort, list);
+
+                if (!string.IsNullOrWhiteSpace(msg))
                 {
-                    if (sort.Contains("descending"))
-                    {
-                        sort = sort.Replace("_descending", "");
-                        ViewBag.sort = sort;
-                    }
-                    else
-                    {
-                        sort = sort + " " + "descending";
-                        ViewBag.sort = sort;
-                    }
+                    ViewBag.msg = (msg.Contains("Your") ? msg.Substring(0, msg.IndexOf("-")) : msg);
                 }
                 else
                 {
-                    list = list.OrderByDescending(x => x.Id).ToList();
-                    ViewBag.sort = "";
+                    ViewBag.msg = "List of vehicles";
                 }
+
                 return View(list);
             }
 
+            if (TempData.ContainsKey("Added"))
+            {
+                ViewBag.added = TempData["Added"];
+            }
+
+            ViewBag.msg = (string.IsNullOrWhiteSpace(msg)) ? "List of vehicles" : msg;
             ViewBag.reg = reg;
             ViewBag.type = type;
             ViewBag.color = color;
@@ -67,6 +71,12 @@ namespace Garage2.Controllers
                 .Where(x => (!string.IsNullOrWhiteSpace(model)) ? x.Model.ToLower().Equals(model.ToLower()) : true)
                 .ToList();
 
+            list = SortList(sort, list);
+            return View(list);
+        }
+
+        private List<Vehicle> SortList(string sort, List<Vehicle> list)
+        {
             if (!string.IsNullOrWhiteSpace(sort))
             {
                 if (sort.Contains("descending"))
@@ -79,14 +89,13 @@ namespace Garage2.Controllers
                     sort = sort + " " + "descending";
                     ViewBag.sort = sort;
                 }
-                list = list.OrderBy(sort).ToList();
             }
             else
             {
                 list = list.OrderByDescending(x => x.Id).ToList();
                 ViewBag.sort = "";
             }
-            return View(list);
+            return list;
         }
 
         public ActionResult CheckOut(DateTime? time, VehicleType? type,
@@ -266,7 +275,7 @@ namespace Garage2.Controllers
                         db.Vehicles.Add(vehicle);
                         db.SaveChanges();
                         getFreeSpaces();
-                        ViewBag.added = true;
+                        TempData["Added"] = true;
                         return RedirectToAction("Index", new { msg = $"List of vehicles - Your {vehicle.Type} has been parked successfully" });
                     }
                     else
