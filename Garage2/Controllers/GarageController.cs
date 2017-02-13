@@ -13,6 +13,7 @@ namespace Garage2.Controllers
     public class GarageController : Controller
     {
         private Garage2Context db = new Garage2Context();
+        private int garageSize = 30;
 
         // GET: Garage
         public ActionResult Index(DateTime? time, VehicleType? type,
@@ -20,9 +21,9 @@ namespace Garage2.Controllers
             string color, string brand, string model, string msg = "")
         {
 
-            ViewBag.Message = (string.IsNullOrWhiteSpace(msg)) ? "List of vehicles" : msg;
-
             List<Vehicle> list = db.Vehicles.ToList();
+
+            ViewBag.msg = (string.IsNullOrWhiteSpace(msg)) ? "List of vehicles" : msg;
 
             if (Request.Form["show"] != null)
             {
@@ -40,11 +41,14 @@ namespace Garage2.Controllers
                         ViewBag.sort = sort;
                     }
                 }
-                else { list = list.OrderByDescending(x => x.Id).ToList(); }
+                else
+                {
+                    list = list.OrderByDescending(x => x.Id).ToList();
+                    ViewBag.sort = "";
+                }
                 return View(list);
             }
 
-            ViewBag.msg = msg;
             ViewBag.reg = reg;
             ViewBag.type = type;
             ViewBag.color = color;
@@ -76,9 +80,12 @@ namespace Garage2.Controllers
                     ViewBag.sort = sort;
                 }
                 list = list.OrderBy(sort).ToList();
-
             }
-            else { list = list.OrderByDescending(x => x.Id).ToList(); }
+            else
+            {
+                list = list.OrderByDescending(x => x.Id).ToList();
+                ViewBag.sort = "";
+            }
             return View(list);
         }
 
@@ -118,10 +125,17 @@ namespace Garage2.Controllers
         // GET: Garage/Create
         public ActionResult Create()
         {
-            return View();
-        }
+            if (getFreeSpaces() <= 0)
+            {
+                ViewBag.GarageFull = true;
+            }
+            else
+            {
+                ViewBag.GarageFull = false;
+            }
 
-        private int garageSize = 30;
+            return View(new CheckInViewModel { AllPlaces = garageSize });
+        }
 
         private int GetParkingSpaceForMotorCycle()
         {
@@ -166,11 +180,51 @@ namespace Garage2.Controllers
                 if (requiredSpaces.Any(x => testSpaces.Contains(x)))
                 {
                     currentSpace = (item.space + item.size);
-                    if (currentSpace > garageSize) return -1;
                 }
                 else break;
             }
             return currentSpace;
+        }
+
+        private int getFreeSpaces()
+        {
+            var freeSpaces = 0;
+
+            var spaces = db.Vehicles
+                .Select(x => new
+                {
+                    space = x.ParkingSpace,
+                    size = x.Size
+                }).Distinct().ToList();
+
+            var count = garageSize;
+            foreach (var item in spaces)
+            {
+                count -= item.size;
+            }
+
+            if (count < 0) { ViewBag.RegularSpaces = 0; }
+            else { ViewBag.RegularSpaces = count; }
+
+            freeSpaces = count;
+            count = 0;
+
+            var motorcycleSpaces = db.Vehicles.Where(x => x.Type == VehicleType.Motorcycle)
+                .GroupBy(g => g.ParkingSpace)
+                .Select(y => new { Space = y.Key, Count = y.Count() }).ToList();
+
+            foreach (var item in motorcycleSpaces)
+            {
+                if (item.Count < 3)
+                {
+                    count += (3 - item.Count);
+                }
+            }
+
+            freeSpaces += count;
+            ViewBag.MotorSpaces = count;
+
+            return freeSpaces;
         }
 
         // POST: Garage/Create
@@ -211,12 +265,21 @@ namespace Garage2.Controllers
                         vehicle.ParkingSpace = parking;
                         db.Vehicles.Add(vehicle);
                         db.SaveChanges();
+                        getFreeSpaces();
+                        ViewBag.added = true;
                         return RedirectToAction("Index", new { msg = $"List of vehicles - Your {vehicle.Type} has been parked successfully" });
+                    }
+                    else
+                    {
+                        getFreeSpaces();
+                        ViewBag.NoSpace = true;
+                        return View(new CheckInViewModel { Vehicle = vehicle, AllPlaces = garageSize });
                     }
                 }
             }
+
             ViewBag.regNErrorMessage = "There is such a Registration Number in DB!";
-            return View(vehicle);
+            return View(new CheckInViewModel { Vehicle = vehicle, AllPlaces = garageSize });
         }
 
         // GET: Garage/Delete/5

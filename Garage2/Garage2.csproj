@@ -143,6 +143,7 @@
       <DependentUpon>201702081550410_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\CheckInViewModel.cs" />
     <Compile Include="Models\Receipt.cs" />
     <Compile Include="Models\Vehicle.cs" />
     <Compile Include="Models\VehicleType.cs" />
