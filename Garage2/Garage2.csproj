@@ -143,7 +143,9 @@
       <DependentUpon>201702081550410_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\GroupByTypeStatistics.cs" />
     <Compile Include="Models\Receipt.cs" />
+    <Compile Include="Models\Statistics.cs" />
     <Compile Include="Models\Vehicle.cs" />
     <Compile Include="Models\VehicleType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -190,6 +192,7 @@
     <Content Include="Views\Garage\Edit.cshtml" />
     <Content Include="Views\Garage\Index.cshtml" />
     <Content Include="Views\Garage\Receipt.cshtml" />
+    <Content Include="Views\Garage\Statistics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

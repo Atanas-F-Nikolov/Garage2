@@ -1,0 +1,74 @@
+﻿@model Garage2.Models.Statistics
+
+<div>
+    <h2>Garage Statistics</h2>
+    <hr />
+
+    <table id="detailsTable" class="table table-condensed table-bordered">
+        <tr>
+            <th>Vehicle type</th>
+            <th>Number</th>
+            <th>Number of wheels</th>
+            <th>Parking time [min]</th>
+            <th>Parking price [kr]</th>
+         </tr>
+        @foreach (var item in Model.GroupByDiffStatistics)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => item.VehicleGroup)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.VehicleCountInAGroup)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.WheelsNumberInAGroup)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.VehicleCountInAGroup)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.VehicleCountInAGroup)
+                </td>
+            </tr>
+        }
+        <tr> <th></th> <th></th> <th></th> <th></th> <th></th></tr>
+        <tr>
+            <th>Total</th>
+            <th>Number</th>
+            <th>Number of wheels</th>
+            <th>Parking time</th>
+            <th>Parking price</th>
+        </tr>
+     </table>
+
+        @*<dl class="dl-horizontal">
+            @foreach (var item in Model.GroupByTypeNumber)
+            {
+                <dt>
+                    @Html.DisplayFor(model => item.VehicleGroup)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => item.CountInAGroup)
+                </dd>
+            }
+        </dl>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.TotalWheelsNumber)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.TotalWheelsNumber)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.TotalPriceInGarage)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.TotalPriceInGarage) kr
+            </dd>
+        </dl>*@
+
+</div>

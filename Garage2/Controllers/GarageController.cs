@@ -55,7 +55,7 @@ namespace Garage2.Controllers
 
             list = list
                 .Where(x => (!string.IsNullOrWhiteSpace(reg)) ? x.RegNumber.ToLower().Contains(reg.ToLower()) : true)
-                .Where(x => (time != null) ? x.TimeStamp.Date.Equals(time.Value.Date) : true)
+                .Where(x => (time != null) ? x.CheckInTimeStamp.Date.Equals(time.Value.Date) : true)
                 .Where(x => (type != null) ? x.Type.Equals(type) : true)
                 .Where(x => (wheels != null) ? x.Wheels.Equals(wheels) : true)
                 .Where(x => (!string.IsNullOrWhiteSpace(color)) ? x.Color.ToLower().Equals(color.ToLower()) : true)
@@ -242,15 +242,61 @@ namespace Garage2.Controllers
             Vehicle vehicle = db.Vehicles.Find(id);
             Receipt receipt = new Receipt();
             receipt.vehicle = vehicle;
-            receipt.PricePerHour = 100;
-            var parkingPeriod = receipt.checkOutTimeStamp.Subtract(vehicle.TimeStamp);
-            receipt.ParkingPeriodInMin = Math.Round(parkingPeriod.TotalMinutes);
-            receipt.TotalPrice = Math.Ceiling((receipt.PricePerHour / 60) * receipt.ParkingPeriodInMin);
+            //receipt.PricePerHour = 100;
+            var parkingPeriod = receipt.CheckOutTimeStamp.Subtract(vehicle.CheckInTimeStamp);
+            receipt.ParkingsPeriodInMin = Math.Round(parkingPeriod.TotalMinutes);
+            receipt.TotalPrice = Math.Ceiling((receipt.PricePerHour / 60) * receipt.ParkingsPeriodInMin);
 
             db.Vehicles.Remove(vehicle);
             db.SaveChanges();
 
             return View("Receipt", receipt);
+        }
+
+        public ActionResult Statistics()
+        {
+            double pricePerHour = 100;
+            List<Vehicle> vehicleList = db.Vehicles.ToList();
+            var StatistiscInAGroup = vehicleList
+                .Where(v => v != null)
+                .GroupBy(v => v.Type)
+                .OrderBy(v => v.Key)
+                .Select(t => new GroupByTypeStatistics
+                {
+                    VehicleCountInAGroup = t.Count(),
+                    VehicleGroup = t.Key,
+                    WheelsNumberInAGroup = t.Sum(x => x.Wheels),
+                    ParkingTimeInAGroup = t.Sum(x => Math.Round(DateTime.Now.Subtract(x.CheckInTimeStamp).TotalMinutes)),
+                    ParkingPriceInAGroup = t.Sum(x => Math.Ceiling((pricePerHour / 60) * Math.Round(DateTime.Now.Subtract(x.CheckInTimeStamp).TotalMinutes)))
+                });
+
+
+
+            var statistics = new Statistics();
+            statistics.GroupByDiffStatistics = StatistiscInAGroup.ToList();
+            
+
+            Receipt receipt = new Receipt();
+
+
+
+
+
+
+            double totalPeriod = 0;
+            int wheelsCount = 0;
+            foreach (var vehicle in vehicleList)
+            {
+                TimeSpan period = receipt.CheckOutTimeStamp.Subtract(vehicle.CheckInTimeStamp);
+                totalPeriod += Math.Round(period.TotalMinutes);
+                wheelsCount += vehicle.Wheels;
+            }
+            statistics.TotalWheelsNumber = wheelsCount;
+            statistics.TotalParkingTime = totalPeriod;
+            statistics.TotalParkingPrice = Math.Ceiling((pricePerHour / 60) * totalPeriod);
+            
+
+            return View(statistics);
         }
 
         protected override void Dispose(bool disposing)

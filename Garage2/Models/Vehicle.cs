@@ -11,7 +11,7 @@ namespace Garage2.Models
     {
         public Vehicle()
         {
-            TimeStamp = DateTime.Now;
+            CheckInTimeStamp = DateTime.Now;
         }
 
         public int Id { get; set; }
@@ -50,7 +50,7 @@ namespace Garage2.Models
 
         [DisplayFormat(DataFormatString = "{0:dd'/'MM'/'yy, HH:mm}")]
         [DisplayName("Check-in time")]
-        public DateTime TimeStamp { get; set; }
+        public DateTime CheckInTimeStamp { get; set; }
 
     }
 }

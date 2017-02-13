@@ -11,19 +11,19 @@ namespace Garage2.Models
     {
         public Receipt()
         {
-            checkOutTimeStamp = DateTime.Now;
+            CheckOutTimeStamp = DateTime.Now;
         }
 
         public Vehicle vehicle { get; set; }
 
-        public double PricePerHour { get; set; }
+        public double PricePerHour { get; set; } = 100;
 
         [DisplayFormat(DataFormatString = "{0:dd'/'MM'/'yy, HH:mm}")]
         [DisplayName("Check-out time")]
-        public DateTime checkOutTimeStamp { get; set; }
+        public DateTime CheckOutTimeStamp { get; set; }
 
         [DisplayName("Total duration")]
-        public double ParkingPeriodInMin { get; set; }
+        public double ParkingsPeriodInMin { get; set; }
 
         [DisplayName("Total price")]
         public double TotalPrice { get; set; }
