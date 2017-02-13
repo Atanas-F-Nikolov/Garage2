@@ -125,7 +125,7 @@ namespace Garage2.Controllers
         // GET: Garage/Create
         public ActionResult Create()
         {
-            if (getFreeSpaces() <= 0)
+            if (GetFreeSpaces() <= 0)
             {
                 ViewBag.GarageFull = true;
             }
@@ -186,7 +186,7 @@ namespace Garage2.Controllers
             return currentSpace;
         }
 
-        private int getFreeSpaces()
+        private int GetFreeSpaces()
         {
             var freeSpaces = 0;
 
@@ -265,13 +265,12 @@ namespace Garage2.Controllers
                         vehicle.ParkingSpace = parking;
                         db.Vehicles.Add(vehicle);
                         db.SaveChanges();
-                        getFreeSpaces();
-                        ViewBag.added = true;
+                        GetFreeSpaces();
                         return RedirectToAction("Index", new { msg = $"List of vehicles - Your {vehicle.Type} has been parked successfully" });
                     }
                     else
                     {
-                        getFreeSpaces();
+                        GetFreeSpaces();
                         ViewBag.NoSpace = true;
                         return View(new CheckInViewModel { Vehicle = vehicle, AllPlaces = garageSize });
                     }
