@@ -176,22 +176,18 @@ namespace Garage2.Controllers
             int[] testSpaces;
             foreach (var item in spaces)
             {
-                for (int i = 0; i < size; i++)
-                {
-                    requiredSpaces[i] = currentSpace + i;
-                }
                 testSpaces = new int[item.size];
-                for (int i = 0; i < item.size; i++)
-                {
-                    testSpaces[i] = item.space + i;
-                }
 
-                if (requiredSpaces.Any(x => testSpaces.Contains(x)))
-                {
-                    currentSpace = (item.space + item.size);
-                }
+                for (int i = 0; i < size; i++) requiredSpaces[i] = currentSpace + i;
+                for (int i = 0; i < item.size; i++) testSpaces[i] = item.space + i;
+
+                if (requiredSpaces.Any(x => testSpaces.Contains(x))) currentSpace = (item.space + item.size);
                 else break;
             }
+
+            if (size > 1) { if (currentSpace + size > garageSize) currentSpace = -1; }
+            else { if (currentSpace > garageSize) currentSpace = -1; }
+
             return currentSpace;
         }
 
@@ -207,10 +203,7 @@ namespace Garage2.Controllers
                 }).Distinct().ToList();
 
             var count = garageSize;
-            foreach (var item in spaces)
-            {
-                count -= item.size;
-            }
+            foreach (var item in spaces) count -= item.size;
 
             if (count < 0) { ViewBag.RegularSpaces = 0; }
             else { ViewBag.RegularSpaces = count; }
@@ -224,10 +217,7 @@ namespace Garage2.Controllers
 
             foreach (var item in motorcycleSpaces)
             {
-                if (item.Count < 3)
-                {
-                    count += (3 - item.Count);
-                }
+                if (item.Count < 3) count += (3 - item.Count);
             }
 
             freeSpaces += count;
