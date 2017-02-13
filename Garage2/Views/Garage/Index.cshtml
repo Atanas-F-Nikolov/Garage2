@@ -2,7 +2,6 @@
 
 @{
     ViewBag.Title = "Index";
-    var count = 0;
 }
 
 <h2>@ViewBag.Message</h2>
@@ -36,19 +35,19 @@
     <table id="detailsTable" class="table table-responsive">
         <tr>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.ParkingSpace).ToString(), "Index", new { sort = "ParkingSpace", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
+                @Html.ActionLink(Html.DisplayNameFor(model => model.ParkingSpace).ToString(), "Index", new { sort = (ViewBag.sort == "ParkingSpace descending") ? "ParkingSpace_descending" : "ParkingSpace", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time, msg = (ViewBag.msg.Contains("Your") ? ViewBag.msg.Substring(0, ViewBag.msg.IndexOf("-")) : ViewBag.msg) })
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.Type).ToString(), "Index", new { sort = "Type", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Type).ToString(), "Index", new { sort = (ViewBag.sort == "Type descending") ? "Type_descending" : "Type", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time, msg = (ViewBag.msg.Contains("Your") ? ViewBag.msg.Substring(0, ViewBag.msg.IndexOf("-")) : ViewBag.msg) })
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.RegNumber).ToString(), "Index", new { sort = "RegNumber", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
+                @Html.ActionLink(Html.DisplayNameFor(model => model.RegNumber).ToString(), "Index", new { sort = (ViewBag.sort == "RegNumber descending") ? "RegNumber_descending" : "RegNumber", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time, msg = (ViewBag.msg.Contains("Your") ? ViewBag.msg.Substring(0, ViewBag.msg.IndexOf("-")) : ViewBag.msg) })
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.Color).ToString(), "Index", new { sort = "Color", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Color).ToString(), "Index", new { sort = (ViewBag.sort == "Color descending") ? "Color_descending" : "Color", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time, msg = (ViewBag.msg.Contains("Your") ? ViewBag.msg.Substring(0, ViewBag.msg.IndexOf("-")) : ViewBag.msg) })
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.TimeStamp).ToString(), "Index", new { sort = "TimeStamp", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time })
+                @Html.ActionLink(Html.DisplayNameFor(model => model.TimeStamp).ToString(), "Index", new { sort = (ViewBag.sort == "TimeStamp descending") ? "TimeStamp_descending" : "TimeStamp", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time, msg = (ViewBag.msg.Contains("Your") ? ViewBag.msg.Substring(0, ViewBag.msg.IndexOf("-")) : ViewBag.msg) })
             </th>
             <th></th>
         </tr>

@@ -17,7 +17,7 @@ namespace Garage2.Controllers
         // GET: Garage
         public ActionResult Index(DateTime? time, VehicleType? type,
             int? wheels, string sort, string reg,
-            string color, string brand, string model, string msg)
+            string color, string brand, string model, string msg = "")
         {
 
             ViewBag.Message = (string.IsNullOrWhiteSpace(msg)) ? "List of vehicles" : msg;
@@ -27,11 +27,24 @@ namespace Garage2.Controllers
             if (Request.Form["show"] != null)
             {
                 ModelState.Clear();
-                if (!string.IsNullOrWhiteSpace(sort)) { list = list.OrderBy(sort).ToList(); }
+                if (!string.IsNullOrWhiteSpace(sort))
+                {
+                    if (sort.Contains("descending"))
+                    {
+                        sort = sort.Replace("_descending", "");
+                        ViewBag.sort = sort;
+                    }
+                    else
+                    {
+                        sort = sort + " " + "descending";
+                        ViewBag.sort = sort;
+                    }
+                }
                 else { list = list.OrderByDescending(x => x.Id).ToList(); }
                 return View(list);
             }
 
+            ViewBag.msg = msg;
             ViewBag.reg = reg;
             ViewBag.type = type;
             ViewBag.color = color;
@@ -50,7 +63,21 @@ namespace Garage2.Controllers
                 .Where(x => (!string.IsNullOrWhiteSpace(model)) ? x.Model.ToLower().Equals(model.ToLower()) : true)
                 .ToList();
 
-            if (!string.IsNullOrWhiteSpace(sort)) { list = list.OrderBy(sort).ToList(); }
+            if (!string.IsNullOrWhiteSpace(sort))
+            {
+                if (sort.Contains("descending"))
+                {
+                    sort = sort.Replace("_descending", "");
+                    ViewBag.sort = sort;
+                }
+                else
+                {
+                    sort = sort + " " + "descending";
+                    ViewBag.sort = sort;
+                }
+                list = list.OrderBy(sort).ToList();
+
+            }
             else { list = list.OrderByDescending(x => x.Id).ToList(); }
             return View(list);
         }

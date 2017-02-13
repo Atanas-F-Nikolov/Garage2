@@ -75,3 +75,9 @@ tr:nth-child(4n) {
         text-decoration: underline;
         cursor: pointer;
     }
+
+@media (max-width: 768px) {
+    .table-responsive {
+        font-size: 12px;
+    }
+}

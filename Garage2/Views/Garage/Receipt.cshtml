@@ -89,5 +89,5 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Back to Vehicle List", "Index")
+    @Html.ActionLink("Back to Vehicle List", "Index", new { msg = $"List of vehicles - Your {Model.vehicle.Type} has been checked out"})
 </p>
