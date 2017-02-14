@@ -62,22 +62,6 @@ textarea {
     border-top: solid 2px #c1c0c0;
 }
 
-.details {
-    background-color: white;
-}
-
-    .details tr {
-        width: 100%;
-        background-color: white;
-        border-bottom: solid 1px #dddddd;
-        border-top: solid 1px #dddddd;
-    }
-
-        .details tr th {
-            color: black;
-            text-align: center;
-        }
-
 .wheels {
     text-align: center;
 }
@@ -138,3 +122,19 @@ address {
 #table-head {
     background-color: #d3d3d3;
 }
+
+#detailsTable .details {
+    background-color: white;
+}
+
+    #detailsTable .details tr {
+        width: 100%;
+        background-color: white;
+        border-bottom: solid 1px #dddddd;
+        border-top: solid 1px #dddddd;
+    }
+
+        #detailsTable .details tr th {
+            color: black;
+            text-align: center;
+        }
