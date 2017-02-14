@@ -287,6 +287,33 @@ namespace Garage2.Controllers
             return View(vehicle);
         }
 
+        public ActionResult Test(int? id)
+        {
+            id = 1;
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Vehicle vehicle = db.Vehicles.First();
+            if (vehicle == null)
+            {
+                return HttpNotFound();
+            }
+
+            Receipt receipt = new Receipt();
+            receipt.PricePerHour = pricePerHour;
+            receipt.vehicle = vehicle;
+            var parkingPeriod = receipt.CheckOutTimeStamp.Subtract(vehicle.CheckInTimeStamp);
+            receipt.ParkingsPeriodInMin = Math.Round(parkingPeriod.TotalMinutes);
+            receipt.TotalPrice = Math.Ceiling((receipt.PricePerHour / 60) * receipt.ParkingsPeriodInMin);
+
+            //db.Vehicles.Remove(vehicle);
+            //db.SaveChanges();
+
+            return View(receipt);
+        }
+
+
         // POST: Garage/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

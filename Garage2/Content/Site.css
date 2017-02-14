@@ -32,20 +32,22 @@ textarea {
     transition: all .5s;
 }
 
-
-
-
-tr:nth-child(1) {
+#detailsTable tr:nth-child(1) {
     background-color: #d3d3d3;
     border-bottom: solid 2px #c1c0c0;
 }
 
-tr:nth-child(2n) {
+#detailsTable tr:nth-child(2n) {
     background-color: #fafafa;
 }
 
-tr:nth-child(4n) {
+#detailsTable tr:nth-child(4n) {
     background-color: #ebebeb;
+}
+
+#statistics tr:nth-child(1) {
+    background-color: #d3d3d3;
+    border-bottom: solid 2px #c1c0c0;
 }
 
 #statistics tr:nth-child(odd) {
@@ -97,6 +99,38 @@ tr:nth-child(4n) {
     }
 }
 
-.jumbotron{
-    text-align:center;
+.jumbotron {
+    text-align: center;
+}
+
+.invoice-head td {
+    background-color: transparent;
+    padding: 0 8px;
+}
+
+.container {
+    padding-top: 30px;
+}
+
+.invoice-body {
+    background-color: transparent;
+}
+
+.invoice-thank {
+    margin-top: 60px;
+    padding: 5px;
+}
+
+address {
+    margin-top: 15px;
+}
+
+#price {
+    text-align: right;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+#table-head {
+    background-color: #d3d3d3;
 }
