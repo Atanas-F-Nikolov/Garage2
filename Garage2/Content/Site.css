@@ -81,3 +81,7 @@ tr:nth-child(4n) {
         font-size: 12px;
     }
 }
+
+.jumbotron{
+    text-align:center;
+}

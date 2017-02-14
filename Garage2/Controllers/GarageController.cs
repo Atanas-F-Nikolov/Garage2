@@ -15,8 +15,15 @@ namespace Garage2.Controllers
         private Garage2Context db = new Garage2Context();
         private int garageSize = 30;
 
+        public ActionResult Home()
+        {
+            GetFreeSpaces();
+            ViewBag.AllPlaces = garageSize;
+            return View();
+        }
+
         // GET: Garage
-        public ActionResult Index(DateTime? time, VehicleType? type,
+        public ActionResult OverView(DateTime? time, VehicleType? type,
             int? wheels, string sort, string reg,
             string color, string brand, string model, string msg = "")
         {
@@ -97,24 +104,6 @@ namespace Garage2.Controllers
                 ViewBag.sort = "";
             }
             return list;
-        }
-
-        public ActionResult CheckOut(DateTime? time, VehicleType? type,
-            int? wheels, string sort, string reg,
-            string color, string brand, string model)
-        {
-            return RedirectToActionPermanent("Index", new
-            {
-                time = time,
-                type = type,
-                wheels = wheels,
-                sort = sort,
-                reg = reg,
-                color = color,
-                brand = brand,
-                model = model,
-                msg = "Select vehicle to check-out"
-            });
         }
 
         // GET: Garage/Details/5
@@ -266,7 +255,7 @@ namespace Garage2.Controllers
                         db.SaveChanges();
                         GetFreeSpaces();
                         TempData["Added"] = true;
-                        return RedirectToAction("Index", new { msg = $"List of vehicles - Your {vehicle.Type} has been parked successfully" });
+                        return RedirectToAction("OverView", new { msg = $"List of vehicles - Your {vehicle.Type} has been parked successfully" });
                     }
                     else
                     {
