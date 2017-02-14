@@ -10,7 +10,7 @@
 }
 
 <h2>@ViewBag.msg</h2>
-
+<hr />
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -52,7 +52,7 @@
                 @Html.ActionLink(Html.DisplayNameFor(model => model.Color).ToString(), "OverView", new { sort = (ViewBag.sort == "Color descending") ? "Color_descending" : "Color", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time, msg = (ViewBag.msg.Contains("Your") ? ViewBag.msg.Substring(0, ViewBag.msg.IndexOf("-")) : ViewBag.msg) })
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.CheckInTimeStamp).ToString(), "OverView", new { sort = (ViewBag.sort == "CheckInTimeStamp descending") ? "CheckInTimeStamp_descending" : "TimeStamp", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time, msg = (ViewBag.msg.Contains("Your") ? ViewBag.msg.Substring(0, ViewBag.msg.IndexOf("-")) : ViewBag.msg) })
+                @Html.ActionLink(Html.DisplayNameFor(model => model.CheckInTimeStamp).ToString(), "OverView", new { sort = (ViewBag.sort == "CheckInTimeStamp descending") ? "CheckInTimeStamp_descending" : "CheckInTimeStamp", reg = ViewBag.reg, type = ViewBag.type, color = ViewBag.color, brand = ViewBag.brand, model = ViewBag.model, wheels = ViewBag.wheels, time = ViewBag.time, msg = (ViewBag.msg.Contains("Your") ? ViewBag.msg.Substring(0, ViewBag.msg.IndexOf("-")) : ViewBag.msg) })
             </th>
             <th></th>
         </tr>
@@ -75,7 +75,7 @@
                         @Html.DisplayFor(modelItem => item.Color)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TimeStamp)
+                        @Html.DisplayFor(modelItem => item.CheckInTimeStamp)
                     </td>
                     <td>
                         <p class="details-btn details-control">Details</p> |
@@ -101,7 +101,7 @@
                         @Html.DisplayFor(modelItem => item.Color)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TimeStamp)
+                        @Html.DisplayFor(modelItem => item.CheckInTimeStamp)
                     </td>
                     <td>
                         <p class="details-btn details-control">Details</p> |
