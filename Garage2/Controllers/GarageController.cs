@@ -82,13 +82,14 @@ namespace Garage2.Controllers
                 if (sort.Contains("descending"))
                 {
                     sort = sort.Replace("_descending", "");
-                    ViewBag.sort = sort;
+                    list = list.OrderBy(sort).ToList();
                 }
                 else
                 {
                     sort = sort + " " + "descending";
-                    ViewBag.sort = sort;
+                    list = list.OrderBy(sort).ToList();
                 }
+                ViewBag.sort = sort;
             }
             else
             {
@@ -134,7 +135,7 @@ namespace Garage2.Controllers
         // GET: Garage/Create
         public ActionResult Create()
         {
-            if (getFreeSpaces() <= 0)
+            if (GetFreeSpaces() <= 0)
             {
                 ViewBag.GarageFull = true;
             }
@@ -185,13 +186,12 @@ namespace Garage2.Controllers
                 else break;
             }
 
-            if (size > 1) { if (currentSpace + size > garageSize) currentSpace = -1; }
-            else { if (currentSpace > garageSize) currentSpace = -1; }
+            if (currentSpace + (size - 1) > garageSize) currentSpace = -1;
 
             return currentSpace;
         }
 
-        private int getFreeSpaces()
+        private int GetFreeSpaces()
         {
             var freeSpaces = 0;
 
@@ -264,18 +264,19 @@ namespace Garage2.Controllers
                         vehicle.ParkingSpace = parking;
                         db.Vehicles.Add(vehicle);
                         db.SaveChanges();
-                        getFreeSpaces();
+                        GetFreeSpaces();
                         TempData["Added"] = true;
                         return RedirectToAction("Index", new { msg = $"List of vehicles - Your {vehicle.Type} has been parked successfully" });
                     }
                     else
                     {
-                        getFreeSpaces();
+                        GetFreeSpaces();
                         ViewBag.NoSpace = true;
                         return View(new CheckInViewModel { Vehicle = vehicle, AllPlaces = garageSize });
                     }
                 }
             }
+            GetFreeSpaces();
 
             ViewBag.regNErrorMessage = "There is such a Registration Number in DB!";
             return View(new CheckInViewModel { Vehicle = vehicle, AllPlaces = garageSize });
