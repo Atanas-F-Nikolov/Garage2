@@ -112,6 +112,10 @@ textarea {
     padding-top: 30px;
 }
 
+.navbar > .container {
+    padding-top: 0;
+}
+
 .invoice-body {
     background-color: transparent;
 }
