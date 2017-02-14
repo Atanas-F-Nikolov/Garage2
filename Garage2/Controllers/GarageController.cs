@@ -15,40 +15,51 @@ namespace Garage2.Controllers
         private Garage2Context db = new Garage2Context();
         private int garageSize = 30;
 
+        public ActionResult Home()
+        {
+            GetFreeSpaces();
+            ViewBag.AllPlaces = garageSize;
+            return View();
+        }
+
         // GET: Garage
-        public ActionResult Index(DateTime? time, VehicleType? type,
+        public ActionResult OverView(DateTime? time, VehicleType? type,
             int? wheels, string sort, string reg,
             string color, string brand, string model, string msg = "")
         {
-
             List<Vehicle> list = db.Vehicles.ToList();
 
-            ViewBag.msg = (string.IsNullOrWhiteSpace(msg)) ? "List of vehicles" : msg;
+            if (Request.Form["search"] != null)
+            {
+                if (!string.IsNullOrWhiteSpace(msg))
+                {
+                    msg = (msg.Contains("Your") ? msg.Substring(0, msg.IndexOf("-")) : msg);
+                }
+            }
 
             if (Request.Form["show"] != null)
             {
                 ModelState.Clear();
-                if (!string.IsNullOrWhiteSpace(sort))
+                list = SortList(sort, list);
+
+                if (!string.IsNullOrWhiteSpace(msg))
                 {
-                    if (sort.Contains("descending"))
-                    {
-                        sort = sort.Replace("_descending", "");
-                        ViewBag.sort = sort;
-                    }
-                    else
-                    {
-                        sort = sort + " " + "descending";
-                        ViewBag.sort = sort;
-                    }
+                    ViewBag.msg = (msg.Contains("Your") ? msg.Substring(0, msg.IndexOf("-")) : msg);
                 }
                 else
                 {
-                    list = list.OrderByDescending(x => x.Id).ToList();
-                    ViewBag.sort = "";
+                    ViewBag.msg = "List of vehicles";
                 }
+
                 return View(list);
             }
 
+            if (TempData.ContainsKey("Added"))
+            {
+                ViewBag.added = TempData["Added"];
+            }
+
+            ViewBag.msg = (string.IsNullOrWhiteSpace(msg)) ? "List of vehicles" : msg;
             ViewBag.reg = reg;
             ViewBag.type = type;
             ViewBag.color = color;
@@ -67,44 +78,32 @@ namespace Garage2.Controllers
                 .Where(x => (!string.IsNullOrWhiteSpace(model)) ? x.Model.ToLower().Equals(model.ToLower()) : true)
                 .ToList();
 
+            list = SortList(sort, list);
+            return View(list);
+        }
+
+        private List<Vehicle> SortList(string sort, List<Vehicle> list)
+        {
             if (!string.IsNullOrWhiteSpace(sort))
             {
                 if (sort.Contains("descending"))
                 {
                     sort = sort.Replace("_descending", "");
-                    ViewBag.sort = sort;
+                    list = list.OrderBy(sort).ToList();
                 }
                 else
                 {
                     sort = sort + " " + "descending";
-                    ViewBag.sort = sort;
+                    list = list.OrderBy(sort).ToList();
                 }
-                list = list.OrderBy(sort).ToList();
+                ViewBag.sort = sort;
             }
             else
             {
                 list = list.OrderByDescending(x => x.Id).ToList();
                 ViewBag.sort = "";
             }
-            return View(list);
-        }
-
-        public ActionResult CheckOut(DateTime? time, VehicleType? type,
-            int? wheels, string sort, string reg,
-            string color, string brand, string model)
-        {
-            return RedirectToActionPermanent("Index", new
-            {
-                time = time,
-                type = type,
-                wheels = wheels,
-                sort = sort,
-                reg = reg,
-                color = color,
-                brand = brand,
-                model = model,
-                msg = "Select vehicle to check-out"
-            });
+            return list;
         }
 
         // GET: Garage/Details/5
@@ -167,22 +166,17 @@ namespace Garage2.Controllers
             int[] testSpaces;
             foreach (var item in spaces)
             {
-                for (int i = 0; i < size; i++)
-                {
-                    requiredSpaces[i] = currentSpace + i;
-                }
                 testSpaces = new int[item.size];
-                for (int i = 0; i < item.size; i++)
-                {
-                    testSpaces[i] = item.space + i;
-                }
 
-                if (requiredSpaces.Any(x => testSpaces.Contains(x)))
-                {
-                    currentSpace = (item.space + item.size);
-                }
+                for (int i = 0; i < size; i++) requiredSpaces[i] = currentSpace + i;
+                for (int i = 0; i < item.size; i++) testSpaces[i] = item.space + i;
+
+                if (requiredSpaces.Any(x => testSpaces.Contains(x))) currentSpace = (item.space + item.size);
                 else break;
             }
+
+            if (currentSpace + (size - 1) > garageSize) currentSpace = -1;
+
             return currentSpace;
         }
 
@@ -198,10 +192,7 @@ namespace Garage2.Controllers
                 }).Distinct().ToList();
 
             var count = garageSize;
-            foreach (var item in spaces)
-            {
-                count -= item.size;
-            }
+            foreach (var item in spaces) count -= item.size;
 
             if (count < 0) { ViewBag.RegularSpaces = 0; }
             else { ViewBag.RegularSpaces = count; }
@@ -215,10 +206,7 @@ namespace Garage2.Controllers
 
             foreach (var item in motorcycleSpaces)
             {
-                if (item.Count < 3)
-                {
-                    count += (3 - item.Count);
-                }
+                if (item.Count < 3) count += (3 - item.Count);
             }
 
             freeSpaces += count;
@@ -266,7 +254,8 @@ namespace Garage2.Controllers
                         db.Vehicles.Add(vehicle);
                         db.SaveChanges();
                         GetFreeSpaces();
-                        return RedirectToAction("Index", new { msg = $"List of vehicles - Your {vehicle.Type} has been parked successfully" });
+                        TempData["Added"] = true;
+                        return RedirectToAction("OverView", new { msg = $"List of vehicles - Your {vehicle.Type} has been parked successfully" });
                     }
                     else
                     {
@@ -276,6 +265,7 @@ namespace Garage2.Controllers
                     }
                 }
             }
+            GetFreeSpaces();
 
             ViewBag.regNErrorMessage = "There is such a Registration Number in DB!";
             return View(new CheckInViewModel { Vehicle = vehicle, AllPlaces = garageSize });

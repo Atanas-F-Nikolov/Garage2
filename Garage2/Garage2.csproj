@@ -184,13 +184,12 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Garage\Create.cshtml" />
     <Content Include="Views\Garage\Delete.cshtml" />
     <Content Include="Views\Garage\Details.cshtml" />
-    <Content Include="Views\Garage\Edit.cshtml" />
-    <Content Include="Views\Garage\Index.cshtml" />
+    <Content Include="Views\Garage\OverView.cshtml" />
     <Content Include="Views\Garage\Receipt.cshtml" />
+    <Content Include="Views\Garage\Home.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
