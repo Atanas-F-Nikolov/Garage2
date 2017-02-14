@@ -2,9 +2,10 @@
 
 <div>
     <h2>Garage Statistics</h2>
+    <h4>Garage price: @ViewBag.PricePerHour kr / hour (@string.Format("{0:n2}", (ViewBag.PricePerHour / 60)) kr / min)</h4>
     <hr />
 
-    <table id="detailsTable" class="table table-condensed table-bordered">
+    <table id="statistics" class="table table-responsive">
         <tr>
             <th>Vehicle type</th>
             <th>Number</th>
@@ -12,6 +13,7 @@
             <th>Parking time [min]</th>
             <th>Parking price [kr]</th>
          </tr>
+
         @foreach (var item in Model.GroupByDiffStatistics)
         {
             <tr>
@@ -19,56 +21,26 @@
                     @Html.DisplayFor(model => item.VehicleGroup)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => item.VehicleCountInAGroup)
+                    @Html.DisplayFor(model => item.VehiclesNumberInAGroup)
                 </td>
                 <td>
                     @Html.DisplayFor(model => item.WheelsNumberInAGroup)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => item.VehicleCountInAGroup)
+                    @Html.DisplayFor(model => item.ParkingTimeInAGroup)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => item.VehicleCountInAGroup)
+                    @Html.DisplayFor(model => item.ParkingPriceInAGroup)
                 </td>
             </tr>
         }
-        <tr> <th></th> <th></th> <th></th> <th></th> <th></th></tr>
-        <tr>
+        
+        <tr id="total">
             <th>Total</th>
-            <th>Number</th>
-            <th>Number of wheels</th>
-            <th>Parking time</th>
-            <th>Parking price</th>
+            <th>@Html.DisplayFor(model => model.TotalVehiclesNumber)</th>
+            <th>@Html.DisplayFor(model => model.TotalWheelsNumber)</th>
+            <th>@Html.DisplayFor(model => model.TotalParkingTime) min </th>
+            <th>@Html.DisplayFor(model => model.TotalParkingPrice) kr</th>
         </tr>
      </table>
-
-        @*<dl class="dl-horizontal">
-            @foreach (var item in Model.GroupByTypeNumber)
-            {
-                <dt>
-                    @Html.DisplayFor(model => item.VehicleGroup)
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => item.CountInAGroup)
-                </dd>
-            }
-        </dl>
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.TotalWheelsNumber)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.TotalWheelsNumber)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.TotalPriceInGarage)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.TotalPriceInGarage) kr
-            </dd>
-        </dl>*@
-
 </div>

@@ -13,6 +13,7 @@ namespace Garage2.Controllers
     public class GarageController : Controller
     {
         private Garage2Context db = new Garage2Context();
+        private double pricePerHour = 100;
 
         // GET: Garage
         public ActionResult Index(DateTime? time, VehicleType? type,
@@ -241,8 +242,8 @@ namespace Garage2.Controllers
         {
             Vehicle vehicle = db.Vehicles.Find(id);
             Receipt receipt = new Receipt();
+            receipt.PricePerHour = pricePerHour;
             receipt.vehicle = vehicle;
-            //receipt.PricePerHour = 100;
             var parkingPeriod = receipt.CheckOutTimeStamp.Subtract(vehicle.CheckInTimeStamp);
             receipt.ParkingsPeriodInMin = Math.Round(parkingPeriod.TotalMinutes);
             receipt.TotalPrice = Math.Ceiling((receipt.PricePerHour / 60) * receipt.ParkingsPeriodInMin);
@@ -253,9 +254,10 @@ namespace Garage2.Controllers
             return View("Receipt", receipt);
         }
 
+
         public ActionResult Statistics()
         {
-            double pricePerHour = 100;
+            
             List<Vehicle> vehicleList = db.Vehicles.ToList();
             var StatistiscInAGroup = vehicleList
                 .Where(v => v != null)
@@ -263,39 +265,25 @@ namespace Garage2.Controllers
                 .OrderBy(v => v.Key)
                 .Select(t => new GroupByTypeStatistics
                 {
-                    VehicleCountInAGroup = t.Count(),
+                    VehiclesNumberInAGroup = t.Count(),
                     VehicleGroup = t.Key,
                     WheelsNumberInAGroup = t.Sum(x => x.Wheels),
                     ParkingTimeInAGroup = t.Sum(x => Math.Round(DateTime.Now.Subtract(x.CheckInTimeStamp).TotalMinutes)),
                     ParkingPriceInAGroup = t.Sum(x => Math.Ceiling((pricePerHour / 60) * Math.Round(DateTime.Now.Subtract(x.CheckInTimeStamp).TotalMinutes)))
                 });
 
-
-
             var statistics = new Statistics();
             statistics.GroupByDiffStatistics = StatistiscInAGroup.ToList();
             
-
-            Receipt receipt = new Receipt();
-
-
-
-
-
-
-            double totalPeriod = 0;
-            int wheelsCount = 0;
-            foreach (var vehicle in vehicleList)
+            foreach (var item in statistics.GroupByDiffStatistics)
             {
-                TimeSpan period = receipt.CheckOutTimeStamp.Subtract(vehicle.CheckInTimeStamp);
-                totalPeriod += Math.Round(period.TotalMinutes);
-                wheelsCount += vehicle.Wheels;
+                statistics.TotalVehiclesNumber += item.VehiclesNumberInAGroup;
+                statistics.TotalWheelsNumber += item.WheelsNumberInAGroup;
+                statistics.TotalParkingTime += item.ParkingTimeInAGroup;
+                statistics.TotalParkingPrice += item.ParkingPriceInAGroup;
             }
-            statistics.TotalWheelsNumber = wheelsCount;
-            statistics.TotalParkingTime = totalPeriod;
-            statistics.TotalParkingPrice = Math.Ceiling((pricePerHour / 60) * totalPeriod);
-            
 
+            ViewBag.PricePerHour = pricePerHour;
             return View(statistics);
         }
 

@@ -16,7 +16,7 @@ namespace Garage2.Models
 
         public Vehicle vehicle { get; set; }
 
-        public double PricePerHour { get; set; } = 100;
+        public double PricePerHour { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd'/'MM'/'yy, HH:mm}")]
         [DisplayName("Check-out time")]
