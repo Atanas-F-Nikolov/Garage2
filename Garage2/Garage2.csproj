@@ -143,6 +143,7 @@
       <DependentUpon>201702081550410_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\CheckInViewModel.cs" />
     <Compile Include="Models\GroupByTypeStatistics.cs" />
     <Compile Include="Models\Receipt.cs" />
     <Compile Include="Models\Statistics.cs" />
@@ -185,14 +186,13 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Garage\Create.cshtml" />
     <Content Include="Views\Garage\Delete.cshtml" />
     <Content Include="Views\Garage\Details.cshtml" />
-    <Content Include="Views\Garage\Edit.cshtml" />
-    <Content Include="Views\Garage\Index.cshtml" />
+    <Content Include="Views\Garage\OverView.cshtml" />
     <Content Include="Views\Garage\Receipt.cshtml" />
     <Content Include="Views\Garage\Statistics.cshtml" />
+    <Content Include="Views\Garage\Home.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
