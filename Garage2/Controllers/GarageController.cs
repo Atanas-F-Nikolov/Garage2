@@ -13,7 +13,7 @@ namespace Garage2.Controllers
     public class GarageController : Controller
     {
         private Garage2Context db = new Garage2Context();
-        private int garageSize = 30;
+        private int garageSize = 20;
         private double pricePerHour = 100;
 
         public ActionResult Home()

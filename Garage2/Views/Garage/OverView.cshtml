@@ -62,9 +62,19 @@
             if (show)
             {
                 <tr class="success">
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ParkingSpace)
-                    </td>
+                    @if (item.Size > 1)
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ParkingSpace) - @(item.ParkingSpace + item.Size - 1)
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ParkingSpace)
+                        </td>
+                    }
+
                     <td>
                         @Html.DisplayFor(modelItem => item.Type)
                     </td>
@@ -88,9 +98,18 @@
             else
             {
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ParkingSpace)
-                    </td>
+                    @if (item.Size > 1)
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ParkingSpace) - @(item.ParkingSpace + item.Size - 1)
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ParkingSpace)
+                        </td>
+                    }
                     <td>
                         @Html.DisplayFor(modelItem => item.Type)
                     </td>
@@ -115,6 +134,7 @@
                         <tr>
                             <th>@Html.DisplayNameFor(Model => Model.Model)</th>
                             <th>@Html.DisplayNameFor(Model => Model.Brand)</th>
+                            <th>@Html.DisplayNameFor(Model => Model.Size)</th>
                             <th>@Html.DisplayNameFor(Model => Model.Wheels)</th>
                             <th></th>
                             <th></th>
@@ -122,6 +142,7 @@
                         <tr>
                             <td>@Html.DisplayFor(x => item.Model)</td>
                             <td>@Html.DisplayFor(x => item.Brand)</td>
+                            <td class="text-center">@Html.DisplayFor(x => item.Size)</td>
                             <td class="wheels">@Html.DisplayFor(x => item.Wheels)</td>
                             <td></td>
                             <td></td>

@@ -36,7 +36,7 @@ namespace Garage2.Migrations
                 new Vehicle { ParkingSpace = 11, Size = 1, Type = VehicleType.Motorcycle, RegNumber = "M 1234-SE", Brand = "Honda", Model = "H746", Wheels = 2, Color = "Red" },
                 new Vehicle { ParkingSpace = 13, Size = 1, Type = VehicleType.Motorcycle, RegNumber = "MR 1224-SE", Brand = "Honda", Model = "H746", Wheels = 2, Color = "White" },
                 new Vehicle { ParkingSpace = 17, Size = 1, Type = VehicleType.Car, RegNumber = "CR 1234-SE", Brand = "Saab", Model = "EY37", Wheels = 4, Color = "Red" },
-                new Vehicle { ParkingSpace = 18, Size = 3, Type = VehicleType.Airplane, RegNumber = "AR 6736-SE", Brand = "SAS", Model = "HR72", Wheels = 12, Color = "White" }
+                new Vehicle { ParkingSpace = 18, Size = 3, Type = VehicleType.Airplane, RegNumber = " AR 6736-SE", Brand = "SAS", Model = "HR72", Wheels = 12, Color = "White" }
                 );
         }
     }

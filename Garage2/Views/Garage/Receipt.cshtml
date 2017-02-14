@@ -76,4 +76,5 @@
             <h5 style="text-align:center;">Thank You!</h5>
         </div>
     </div>
+    @Html.ActionLink("Back to list", "OverView", new { msg = $"List of vehicles - Your {Model.vehicle.Type} has been successfully checked-out" }, null)
 </div>
