@@ -2,13 +2,18 @@
     // Add event listener for opening and closing details
     $('#detailsTable').on('click', '.details-control', function () {
         var tr = $(this).closest('tr');
+        var row = tr.next();
 
-        if (tr.next().hasClass('hidden')) {
-            // This row is already open - close it
-            tr.next().removeClass('hidden');
+        if (row.hasClass('hidden')) {
+            if (!row.hasClass('loaded')) {
+                var url = $(this).data('request-url');
+                row.load(url);
+                row.addClass('loaded');
+            }
+            row.removeClass('hidden');
         }
         else {
-            tr.next().addClass('hidden');
+            row.addClass('hidden');
         }
     });
-})()
+})();

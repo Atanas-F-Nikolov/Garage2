@@ -1,0 +1,22 @@
+﻿@model Garage2.Models.OverViewDetailsModel
+
+<td colspan="10">
+    <table class="details" cellpadding="10" cellspacing="0" border="0">
+        <tr>
+            <th>@Html.DisplayNameFor(Model => Model.Model)</th>
+            <th>@Html.DisplayNameFor(Model => Model.Brand)</th>
+            <th>@Html.DisplayNameFor(Model => Model.Size)</th>
+            <th>@Html.DisplayNameFor(Model => Model.Wheels)</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr>
+            <td>@Html.DisplayFor(x => x.Model)</td>
+            <td>@Html.DisplayFor(x => x.Brand)</td>
+            <td class="text-center">@Html.DisplayFor(x => x.Size)</td>
+            <td class="wheels">@Html.DisplayFor(x => x.Wheels)</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+</td>

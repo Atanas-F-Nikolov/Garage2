@@ -25,10 +25,19 @@ namespace Garage2.Controllers
 
         // GET: Garage
         public ActionResult OverView(DateTime? time, VehicleType? type,
-            int? wheels, string sort, string reg,
-            string color, string brand, string model, string msg = "")
+            string sort, string reg,
+            string color, string msg = "")
         {
-            List<Vehicle> list = db.Vehicles.ToList();
+            List<OverViewModel> list = db.Vehicles.Select(x =>
+            new OverViewModel
+            {
+                CheckInTimeStamp = x.CheckInTimeStamp,
+                Color = x.Color,
+                ParkingSpace = (x.Size > 1) ? x.ParkingSpace + " - " + (x.ParkingSpace + x.Size - 1) : x.ParkingSpace.ToString(),
+                RegNumber = x.RegNumber,
+                Type = x.Type,
+                VehicleId = x.Id
+            }).ToList();
 
             if (Request.Form["search"] != null)
             {
@@ -64,26 +73,20 @@ namespace Garage2.Controllers
             ViewBag.reg = reg;
             ViewBag.type = type;
             ViewBag.color = color;
-            ViewBag.brand = brand;
-            ViewBag.model = model;
-            ViewBag.wheels = wheels;
             ViewBag.time = time;
 
             list = list
                 .Where(x => (!string.IsNullOrWhiteSpace(reg)) ? x.RegNumber.ToLower().Contains(reg.ToLower()) : true)
                 .Where(x => (time != null) ? x.CheckInTimeStamp.Date.Equals(time.Value.Date) : true)
                 .Where(x => (type != null) ? x.Type.Equals(type) : true)
-                .Where(x => (wheels != null) ? x.Wheels.Equals(wheels) : true)
                 .Where(x => (!string.IsNullOrWhiteSpace(color)) ? x.Color.ToLower().Equals(color.ToLower()) : true)
-                .Where(x => (!string.IsNullOrWhiteSpace(brand)) ? x.Brand.ToLower().Equals(brand.ToLower()) : true)
-                .Where(x => (!string.IsNullOrWhiteSpace(model)) ? x.Model.ToLower().Equals(model.ToLower()) : true)
                 .ToList();
 
             list = SortList(sort, list);
             return View(list);
         }
 
-        private List<Vehicle> SortList(string sort, List<Vehicle> list)
+        private List<OverViewModel> SortList(string sort, List<OverViewModel> list)
         {
             if (!string.IsNullOrWhiteSpace(sort))
             {
@@ -101,7 +104,7 @@ namespace Garage2.Controllers
             }
             else
             {
-                list = list.OrderByDescending(x => x.Id).ToList();
+                list = list.OrderByDescending(x => x.VehicleId).ToList();
                 ViewBag.sort = "";
             }
             return list;
@@ -120,6 +123,24 @@ namespace Garage2.Controllers
                 return HttpNotFound();
             }
             return View(vehicle);
+        }
+
+        public ActionResult OverViewDetails(int? id)
+        {
+            if (id != null)
+            {
+                var details = db.Vehicles.Where(x => x.Id == id)
+                                .Select(x => new OverViewDetailsModel
+                                {
+                                    Model = x.Model,
+                                    Brand = x.Brand,
+                                    Size = x.Size,
+                                    Wheels = x.Wheels,
+                                }).First();
+
+                return PartialView("_OverViewDetails", details);
+            }
+            return PartialView("_OverViewDetails");
         }
 
         // GET: Garage/Create
@@ -308,7 +329,7 @@ namespace Garage2.Controllers
 
         public ActionResult Statistics()
         {
-            
+
             List<Vehicle> vehicleList = db.Vehicles.ToList();
             var StatistiscInAGroup = vehicleList
                 .Where(v => v != null)
@@ -325,7 +346,7 @@ namespace Garage2.Controllers
 
             var statistics = new Statistics();
             statistics.GroupByDiffStatistics = StatistiscInAGroup.ToList();
-            
+
             foreach (var item in statistics.GroupByDiffStatistics)
             {
                 statistics.TotalVehiclesNumber += item.VehiclesNumberInAGroup;
