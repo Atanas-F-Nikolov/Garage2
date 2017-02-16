@@ -90,16 +90,15 @@ namespace Garage2.Controllers
         {
             if (!string.IsNullOrWhiteSpace(sort))
             {
-                if (sort.Contains("descending"))
+                if (sort.Contains("descending")) sort = sort.Replace("_descending", "");
+                else sort = sort + " " + "descending";
+
+                if (sort.Contains("ParkingSpace"))
                 {
-                    sort = sort.Replace("_descending", "");
-                    list = list.OrderBy(sort).ToList();
+                    if (sort.Contains("descending")) list = list.OrderByDescending(x => int.Parse((x.ParkingSpace.Contains("-")) ? x.ParkingSpace.Substring(0, (x.ParkingSpace.IndexOf("-") - 1)) : x.ParkingSpace)).ToList();
+                    else list = list.OrderBy(x => int.Parse((x.ParkingSpace.Contains("-")) ? x.ParkingSpace.Substring(0, (x.ParkingSpace.IndexOf("-") - 1)) : x.ParkingSpace)).ToList();
                 }
-                else
-                {
-                    sort = sort + " " + "descending";
-                    list = list.OrderBy(sort).ToList();
-                }
+                else list = list.OrderBy(sort).ToList();
                 ViewBag.sort = sort;
             }
             else
