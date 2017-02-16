@@ -104,7 +104,7 @@
                         @Html.DisplayFor(modelItem => item.CheckInTimeStamp)
                     </td>
                     <td>
-                        <a href="#" class="details-control" data-request-url="@Url.Action("OverViewDetails", "Garage", new { id = item.VehicleId })">Details</a> |
+                        <p class="details-btn details-control" data-request-url="@Url.Action("OverViewDetails", "Garage", new { id = item.VehicleId })">Details</p> |
                         @Html.ActionLink("Check-out", "Delete", new { id = item.VehicleId })
                     </td>
                 </tr>
