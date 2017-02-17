@@ -33,57 +33,56 @@ namespace Garage2.Controllers
             {
                 CheckInTimeStamp = x.CheckInTimeStamp,
                 Color = x.Color,
-                ParkingSpace = (x.Size > 1) ? x.ParkingSpace + " - " + (x.ParkingSpace + x.Size - 1) : x.ParkingSpace.ToString(),
+                ParkingSpace = "",
                 RegNumber = x.RegNumber,
                 Type = x.Type,
                 VehicleId = x.Id
             }).ToList();
 
-            if (Request.Form["search"] != null)
-            {
-                if (!string.IsNullOrWhiteSpace(msg))
-                {
-                    msg = (msg.Contains("Your") ? msg.Substring(0, msg.IndexOf("-")) : msg);
-                }
-            }
+            //if (Request.Form["search"] != null)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(msg))
+            //    {
+            //        msg = (msg.Contains("Your") ? msg.Substring(0, msg.IndexOf("-")) : msg);
+            //    }
+            //}
 
-            if (Request.Form["show"] != null)
-            {
-                ModelState.Clear();
-                list = SortList(sort, list);
+            //if (Request.Form["show"] != null)
+            //{
+            //    ModelState.Clear();
+            //    list = SortList(sort, list);
 
-                if (!string.IsNullOrWhiteSpace(msg))
-                {
-                    ViewBag.msg = (msg.Contains("Your") ? msg.Substring(0, msg.IndexOf("-")) : msg);
-                }
-                else
-                {
-                    ViewBag.msg = "List of vehicles";
-                }
+            //    if (!string.IsNullOrWhiteSpace(msg))
+            //    {
+            //        ViewBag.msg = (msg.Contains("Your") ? msg.Substring(0, msg.IndexOf("-")) : msg);
+            //    }
+            //    else
+            //    {
+            //        ViewBag.msg = "List of vehicles";
+            //    }
 
-                return View(list);
-            }
-
-            if (TempData.ContainsKey("Added"))
-            {
-                ViewBag.added = TempData["Added"];
-            }
-
-            ViewBag.msg = (string.IsNullOrWhiteSpace(msg)) ? "List of vehicles" : msg;
-            ViewBag.reg = reg;
-            ViewBag.type = type;
-            ViewBag.color = color;
-            ViewBag.time = time;
-
-            list = list
-                .Where(x => (!string.IsNullOrWhiteSpace(reg)) ? x.RegNumber.ToLower().Contains(reg.ToLower()) : true)
-                .Where(x => (time != null) ? x.CheckInTimeStamp.Date.Equals(time.Value.Date) : true)
-                .Where(x => (type != null) ? x.Type.Equals(type) : true)
-                .Where(x => (!string.IsNullOrWhiteSpace(color)) ? x.Color.ToLower().Equals(color.ToLower()) : true)
-                .ToList();
-
-            list = SortList(sort, list);
             return View(list);
+            
+            //if (TempData.ContainsKey("Added"))
+            //{
+            //    ViewBag.added = TempData["Added"];
+            //}
+
+            //ViewBag.msg = (string.IsNullOrWhiteSpace(msg)) ? "List of vehicles" : msg;
+            //ViewBag.reg = reg;
+            //ViewBag.type = type;
+            //ViewBag.color = color;
+            //ViewBag.time = time;
+
+            //list = list
+            //    .Where(x => (!string.IsNullOrWhiteSpace(reg)) ? x.RegNumber.ToLower().Contains(reg.ToLower()) : true)
+            //    .Where(x => (time != null) ? x.CheckInTimeStamp.Date.Equals(time.Value.Date) : true)
+            //    .Where(x => (type != null) ? x.Type.Equals(type) : true)
+            //    .Where(x => (!string.IsNullOrWhiteSpace(color)) ? x.Color.ToLower().Equals(color.ToLower()) : true)
+            //    .ToList();
+
+            //list = SortList(sort, list);
+            //return View(list);
         }
 
         private List<OverViewModel> SortList(string sort, List<OverViewModel> list)
@@ -128,16 +127,16 @@ namespace Garage2.Controllers
         {
             if (id != null)
             {
-                var details = db.Vehicles.Where(x => x.Id == id)
-                                .Select(x => new OverViewDetailsModel
-                                {
-                                    Model = x.Model,
-                                    Brand = x.Brand,
-                                    Size = x.Size,
-                                    Wheels = x.Wheels,
-                                }).First();
+                //var details = db.Vehicles.Where(x => x.Id == id)
+                //                .Select(x => new OverViewDetailsModel
+                //                {
+                //                    Model = x.Model,
+                //                    Brand = x.Brand,
+                //                    Size = x.Size,
+                //                    Wheels = x.Wheels,
+                //                }).First();
 
-                return PartialView("_OverViewDetails", details);
+                return PartialView("_OverViewDetails");
             }
             return PartialView("_OverViewDetails");
         }
@@ -175,30 +174,30 @@ namespace Garage2.Controllers
 
         private int GetParkingSpace(int size)
         {
-            var spaces = db.Vehicles.Select(x => new
-            {
-                space = x.ParkingSpace,
-                size = x.Size
-            }).Distinct().OrderBy(x => x.space).ToList();
+            //var spaces = db.Vehicles.Select(x => new
+            //{
+            //    space = x.ParkingSpace,
+            //    size = x.Size
+            //}).Distinct().OrderBy(x => x.space).ToList();
 
-            var currentSpace = 1;
+            //var currentSpace = 1;
 
-            int[] requiredSpaces = new int[size];
-            int[] testSpaces;
-            foreach (var item in spaces)
-            {
-                testSpaces = new int[item.size];
+            //int[] requiredSpaces = new int[size];
+            //int[] testSpaces;
+            //foreach (var item in spaces)
+            //{
+            //    testSpaces = new int[item.size];
 
-                for (int i = 0; i < size; i++) requiredSpaces[i] = currentSpace + i;
-                for (int i = 0; i < item.size; i++) testSpaces[i] = item.space + i;
+            //    for (int i = 0; i < size; i++) requiredSpaces[i] = currentSpace + i;
+            //    for (int i = 0; i < item.size; i++) testSpaces[i] = item.space + i;
 
-                if (requiredSpaces.Any(x => testSpaces.Contains(x))) currentSpace = (item.space + item.size);
-                else break;
-            }
+            //    if (requiredSpaces.Any(x => testSpaces.Contains(x))) currentSpace = (item.space + item.size);
+            //    else break;
+            //}
 
-            if (currentSpace + (size - 1) > garageSize) currentSpace = -1;
+            //if (currentSpace + (size - 1) > garageSize) currentSpace = -1;
 
-            return currentSpace;
+            return size;
         }
 
         //private int GetFreeSpaces()
