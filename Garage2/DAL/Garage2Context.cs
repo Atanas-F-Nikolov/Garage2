@@ -20,5 +20,9 @@ namespace Garage2.DAL
         }
 
         public System.Data.Entity.DbSet<Garage2.Models.Vehicle> Vehicles { get; set; }
+
+        public System.Data.Entity.DbSet<Garage2.Models.Member> Members { get; set; }
+
+        public System.Data.Entity.DbSet<Garage2.Models.VehicleType> VehicleTypes { get; set; }
     }
 }

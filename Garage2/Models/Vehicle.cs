@@ -15,7 +15,6 @@ namespace Garage2.Models
         }
 
         public int Id { get; set; }
-        public VehicleType Type { get; set; }
 
         [DisplayName("Parking space")]
         public int ParkingSpace { get; set; }
@@ -23,13 +22,13 @@ namespace Garage2.Models
 
         [DisplayName("Registration number")]
         [Required(ErrorMessage = "Please enter a registration number!")]
-        [MaxLength(10 ,ErrorMessage = "Please enter max 10 characters!")]
+        [MaxLength(10, ErrorMessage = "Please enter max 10 characters!")]
         [MinLength(4, ErrorMessage = "Please enter min 4 characters!")]
         [RegularExpression(@"^([a-zA-Z0-9 \-]+)$", ErrorMessage = "Only \"–\" as a special symbol is allowed!")]
         public string RegNumber { get; set; }
 
         [StringLength(10, ErrorMessage = "Please enter max 10 characters!")]
-        [RegularExpression(@"^([a-zA-Z]+)$", ErrorMessage= "Please, enter only letters!")]
+        [RegularExpression(@"^([a-zA-Z]+)$", ErrorMessage = "Please, enter only letters!")]
         [DisplayFormat(NullDisplayText = "[NotSet]")]
         public string Color { get; set; }
 
@@ -52,5 +51,10 @@ namespace Garage2.Models
         [DisplayName("Check-in time")]
         public DateTime CheckInTimeStamp { get; set; }
 
+        public int VehicleTypeId { get; set; }
+        public int MemberId { get; set; }
+
+        public virtual VehicleType Type { get; set; }
+        public virtual Member Owner { get; set; }
     }
 }

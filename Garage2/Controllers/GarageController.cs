@@ -18,13 +18,13 @@ namespace Garage2.Controllers
 
         public ActionResult Home()
         {
-            GetFreeSpaces();
+            //GetFreeSpaces();
             ViewBag.AllPlaces = garageSize;
             return View();
         }
 
         // GET: Garage
-        public ActionResult OverView(DateTime? time, VehicleType? type,
+        public ActionResult OverView(DateTime? time, VehicleType type,
             string sort, string reg,
             string color, string msg = "")
         {
@@ -145,33 +145,33 @@ namespace Garage2.Controllers
         // GET: Garage/Create
         public ActionResult Create()
         {
-            if (GetFreeSpaces() <= 0)
-            {
-                ViewBag.GarageFull = true;
-            }
-            else
-            {
-                ViewBag.GarageFull = false;
-            }
+            //if (GetFreeSpaces() <= 0)
+            //{
+            //    ViewBag.GarageFull = true;
+            //}
+            //else
+            //{
+            //    ViewBag.GarageFull = false;
+            //}
 
             return View(new CheckInViewModel { AllPlaces = garageSize });
         }
 
-        private int GetParkingSpaceForMotorCycle()
-        {
-            var spaces = db.Vehicles.Where(x => x.Type == VehicleType.Motorcycle)
-                .GroupBy(g => g.ParkingSpace)
-                .Select(y => new { Space = y.Key, Count = y.Count() }).ToList();
+        //private int GetParkingSpaceForMotorCycle()
+        //{
+        //    var spaces = db.Vehicles.Where(x => x.Type == VehicleType.Motorcycle)
+        //        .GroupBy(g => g.ParkingSpace)
+        //        .Select(y => new { Space = y.Key, Count = y.Count() }).ToList();
 
-            foreach (var parkingSpace in spaces)
-            {
-                if (parkingSpace.Count < 3)
-                {
-                    return parkingSpace.Space;
-                }
-            }
-            return GetParkingSpace(1);
-        }
+        //    foreach (var parkingSpace in spaces)
+        //    {
+        //        if (parkingSpace.Count < 3)
+        //        {
+        //            return parkingSpace.Space;
+        //        }
+        //    }
+        //    return GetParkingSpace(1);
+        //}
 
         private int GetParkingSpace(int size)
         {
@@ -201,40 +201,40 @@ namespace Garage2.Controllers
             return currentSpace;
         }
 
-        private int GetFreeSpaces()
-        {
-            var freeSpaces = 0;
+        //private int GetFreeSpaces()
+        //{
+        //    var freeSpaces = 0;
 
-            var spaces = db.Vehicles
-                .Select(x => new
-                {
-                    space = x.ParkingSpace,
-                    size = x.Size
-                }).Distinct().ToList();
+        //    var spaces = db.Vehicles
+        //        .Select(x => new
+        //        {
+        //            space = x.ParkingSpace,
+        //            size = x.Size
+        //        }).Distinct().ToList();
 
-            var count = garageSize;
-            foreach (var item in spaces) count -= item.size;
+        //    var count = garageSize;
+        //    foreach (var item in spaces) count -= item.size;
 
-            if (count < 0) { ViewBag.RegularSpaces = 0; }
-            else { ViewBag.RegularSpaces = count; }
+        //    if (count < 0) { ViewBag.RegularSpaces = 0; }
+        //    else { ViewBag.RegularSpaces = count; }
 
-            freeSpaces = count;
-            count = 0;
+        //    freeSpaces = count;
+        //    count = 0;
 
-            var motorcycleSpaces = db.Vehicles.Where(x => x.Type == VehicleType.Motorcycle)
-                .GroupBy(g => g.ParkingSpace)
-                .Select(y => new { Space = y.Key, Count = y.Count() }).ToList();
+        //    var motorcycleSpaces = db.Vehicles.Where(x => x.Type == VehicleType.Motorcycle)
+        //        .GroupBy(g => g.ParkingSpace)
+        //        .Select(y => new { Space = y.Key, Count = y.Count() }).ToList();
 
-            foreach (var item in motorcycleSpaces)
-            {
-                if (item.Count < 3) count += (3 - item.Count);
-            }
+        //    foreach (var item in motorcycleSpaces)
+        //    {
+        //        if (item.Count < 3) count += (3 - item.Count);
+        //    }
 
-            freeSpaces += count;
-            ViewBag.MotorSpaces = count;
+        //    freeSpaces += count;
+        //    ViewBag.MotorSpaces = count;
 
-            return freeSpaces;
-        }
+        //    return freeSpaces;
+        //}
 
         // POST: Garage/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -243,53 +243,54 @@ namespace Garage2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Type,RegNumber,Color,Brand,Model,Wheels")] Vehicle vehicle)
         {
-            List<string> regNumberslist = db.Vehicles.Select(x => x.RegNumber.ToLower()).ToList();
-            if (!regNumberslist.Contains(vehicle.RegNumber.ToLower()))
-            {
-                if (ModelState.IsValid)
-                {
-                    switch (vehicle.Type)
-                    {
-                        case VehicleType.Airplane:
-                            vehicle.Size = 3;
-                            break;
-                        case VehicleType.Boat:
-                            vehicle.Size = 3;
-                            break;
-                        case VehicleType.Buss:
-                            vehicle.Size = 2;
-                            break;
-                        case VehicleType.Car:
-                            vehicle.Size = 1;
-                            break;
-                        case VehicleType.Motorcycle:
-                            vehicle.Size = 1;
-                            break;
-                    }
+            //    List<string> regNumberslist = db.Vehicles.Select(x => x.RegNumber.ToLower()).ToList();
+            //    if (!regNumberslist.Contains(vehicle.RegNumber.ToLower()))
+            //    {
+            //        if (ModelState.IsValid)
+            //        {
+            //            switch (vehicle.Type)
+            //            {
+            //                case VehicleType.Airplane:
+            //                    vehicle.Size = 3;
+            //                    break;
+            //                case VehicleType.Boat:
+            //                    vehicle.Size = 3;
+            //                    break;
+            //                case VehicleType.Buss:
+            //                    vehicle.Size = 2;
+            //                    break;
+            //                case VehicleType.Car:
+            //                    vehicle.Size = 1;
+            //                    break;
+            //                case VehicleType.Motorcycle:
+            //                    vehicle.Size = 1;
+            //                    break;
+            //            }
 
-                    var parking = (vehicle.Type == VehicleType.Motorcycle) ? GetParkingSpaceForMotorCycle() : GetParkingSpace(vehicle.Size);
+            //            var parking = (vehicle.Type == VehicleType.Motorcycle) ? GetParkingSpaceForMotorCycle() : GetParkingSpace(vehicle.Size);
 
-                    if (parking != -1)
-                    {
-                        vehicle.ParkingSpace = parking;
-                        db.Vehicles.Add(vehicle);
-                        db.SaveChanges();
-                        GetFreeSpaces();
-                        TempData["Added"] = true;
-                        return RedirectToAction("OverView", new { msg = $"List of vehicles - Your {vehicle.Type} has been parked successfully" });
-                    }
-                    else
-                    {
-                        GetFreeSpaces();
-                        ViewBag.NoSpace = true;
-                        return View(new CheckInViewModel { Vehicle = vehicle, AllPlaces = garageSize });
-                    }
-                }
-            }
-            GetFreeSpaces();
+            //            if (parking != -1)
+            //            {
+            //                vehicle.ParkingSpace = parking;
+            //                db.Vehicles.Add(vehicle);
+            //                db.SaveChanges();
+            //                GetFreeSpaces();
+            //                TempData["Added"] = true;
+            //                return RedirectToAction("OverView", new { msg = $"List of vehicles - Your {vehicle.Type} has been parked successfully" });
+            //            }
+            //            else
+            //            {
+            //                GetFreeSpaces();
+            //                ViewBag.NoSpace = true;
+            //                return View(new CheckInViewModel { Vehicle = vehicle, AllPlaces = garageSize });
+            //            }
+            //        }
+            //    }
+            //    GetFreeSpaces();
 
-            ViewBag.regNErrorMessage = "There is such a Registration Number in DB!";
-            return View(new CheckInViewModel { Vehicle = vehicle, AllPlaces = garageSize });
+            //    ViewBag.regNErrorMessage = "There is such a Registration Number in DB!";
+            //    return View(new CheckInViewModel { Vehicle = vehicle, AllPlaces = garageSize });
+            return View();
         }
 
         // GET: Garage/Delete/5

@@ -134,6 +134,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\GarageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MembersController.cs" />
+    <Compile Include="Controllers\VehiclesController.cs" />
     <Compile Include="DAL\Garage2Context.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -145,6 +147,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CheckInViewModel.cs" />
     <Compile Include="Models\GroupByTypeStatistics.cs" />
+    <Compile Include="Models\Member.cs" />
     <Compile Include="Models\OverViewDetailsModel.cs" />
     <Compile Include="Models\OverViewModel.cs" />
     <Compile Include="Models\Receipt.cs" />
@@ -196,6 +199,16 @@
     <Content Include="Views\Garage\Statistics.cshtml" />
     <Content Include="Views\Garage\Home.cshtml" />
     <Content Include="Views\Garage\_OverViewDetails.cshtml" />
+    <Content Include="Views\Members\Create.cshtml" />
+    <Content Include="Views\Members\Delete.cshtml" />
+    <Content Include="Views\Members\Details.cshtml" />
+    <Content Include="Views\Members\Edit.cshtml" />
+    <Content Include="Views\Members\Index.cshtml" />
+    <Content Include="Views\Vehicles\Create.cshtml" />
+    <Content Include="Views\Vehicles\Delete.cshtml" />
+    <Content Include="Views\Vehicles\Details.cshtml" />
+    <Content Include="Views\Vehicles\Edit.cshtml" />
+    <Content Include="Views\Vehicles\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

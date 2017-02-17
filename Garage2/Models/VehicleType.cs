@@ -5,12 +5,9 @@ using System.Web;
 
 namespace Garage2.Models
 {
-    public enum VehicleType
+    public class VehicleType
     {
-        Airplane,
-        Boat,
-        Buss,
-        Car,
-        Motorcycle,
+        public int Id { get; set; }
+        public string Type { get; set; }
     }
 }
