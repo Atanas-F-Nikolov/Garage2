@@ -35,7 +35,7 @@ namespace Garage2.Controllers
         private List<Vehicle> SearchInList(string regNr, int? VehicleTypeId, List<Vehicle> vehicles)
         {
             vehicles = vehicles
-                .Where(x => (!string.IsNullOrWhiteSpace(regNr)) ? x.RegNumber.Equals(regNr) : true)
+                .Where(x => (!string.IsNullOrWhiteSpace(regNr)) ? x.RegNumber.ToLower().Contains(regNr.ToLower()) : true)
                 .Where(x => (VehicleTypeId != null) ? x.Type.Id.Equals(VehicleTypeId) : true).ToList();
             ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type");
             return vehicles;
@@ -61,13 +61,18 @@ namespace Garage2.Controllers
         public ActionResult BasicOverView(string regNr, int? VehicleTypeId)
         {
             List<VehicleDetailsViewModel> list = CreateViewModelList();
+            list = list
+                .Where(x => (!string.IsNullOrWhiteSpace(regNr)) ? x.RegNumber.ToLower().Contains(regNr.ToLower()) : true)
+                .Where(x => (VehicleTypeId != null) ? x.TypeId.Equals(VehicleTypeId) : true).ToList();
+
+            ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type");
             return View(list);
         }
 
         public ActionResult BasicOverView()
         {
             List<VehicleDetailsViewModel> list = CreateViewModelList();
-
+            ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type");
             return View(list);
         }
 
@@ -77,6 +82,7 @@ namespace Garage2.Controllers
                         new VehicleDetailsViewModel
                         {
                             VehicleId = x.Id,
+                            TypeId = x.Type.Id,
                             Owner = x.Owner.FirstName + " " + x.Owner.LastName,
                             ParkingTime = x.CheckInTimeStamp.ToString(),
                             RegNumber = x.RegNumber,

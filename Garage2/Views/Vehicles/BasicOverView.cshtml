@@ -6,9 +6,26 @@
 
 <h2>BasicOverView</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="container form-container">
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                @Html.Label("Registration number")
+                @Html.TextBox("regNr", "", new { @class = "form-control" })
+            </div>
+            <div class="col-sm-6 col-md-4">
+                @Html.Label("Type")
+                @Html.DropDownList("VehicleTypeId", null, "All", htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="btn-group search">
+            <input type="submit" name="search" value="Search" class="btn btn-default" />
+            <input type="submit" name="show" value="Show all" class="btn btn-default" />
+        </div>
+    </div>
+}
 <table class="table">
     <tr>
         <th>
