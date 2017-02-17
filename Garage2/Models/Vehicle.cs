@@ -18,7 +18,6 @@ namespace Garage2.Models
 
         [DisplayName("Parking space")]
         public int ParkingSpace { get; set; }
-        public int Size { get; set; }
 
         [DisplayName("Registration number")]
         [Required(ErrorMessage = "Please enter a registration number!")]
@@ -51,7 +50,9 @@ namespace Garage2.Models
         [DisplayName("Check-in time")]
         public DateTime CheckInTimeStamp { get; set; }
 
+        [DisplayName("Vehicle type")]
         public int VehicleTypeId { get; set; }
+        [DisplayName("Owner")]
         public int MemberId { get; set; }
 
         public virtual VehicleType Type { get; set; }

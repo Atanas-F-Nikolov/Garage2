@@ -18,8 +18,27 @@ namespace Garage2.Controllers
         // GET: Vehicles
         public ActionResult Index()
         {
-            var vehicles = db.Vehicles.Include(v => v.Owner).Include(v => v.Type);
+            var vehicles = db.Vehicles;
+            ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type");
             return View(vehicles.ToList());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(string regNr, int? VehicleTypeId)
+        {
+            var vehicles = db.Vehicles.ToList();
+            vehicles = SearchInList(regNr, VehicleTypeId, vehicles);
+            return View(vehicles);
+        }
+
+        private List<Vehicle> SearchInList(string regNr, int? VehicleTypeId, List<Vehicle> vehicles)
+        {
+            vehicles = vehicles
+                .Where(x => (!string.IsNullOrWhiteSpace(regNr)) ? x.RegNumber.Equals(regNr) : true)
+                .Where(x => (VehicleTypeId != null) ? x.Type.Id.Equals(VehicleTypeId) : true).ToList();
+            ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type");
+            return vehicles;
         }
 
         // GET: Vehicles/Details/5
@@ -37,10 +56,63 @@ namespace Garage2.Controllers
             return View(vehicle);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult BasicOverView(string regNr, int? VehicleTypeId)
+        {
+            List<VehicleDetailsViewModel> list = CreateViewModelList();
+            return View(list);
+        }
+
+        public ActionResult BasicOverView()
+        {
+            List<VehicleDetailsViewModel> list = CreateViewModelList();
+
+            return View(list);
+        }
+
+        private List<VehicleDetailsViewModel> CreateViewModelList()
+        {
+            var list = db.Vehicles.Select(x =>
+                        new VehicleDetailsViewModel
+                        {
+                            VehicleId = x.Id,
+                            Owner = x.Owner.FirstName + " " + x.Owner.LastName,
+                            ParkingTime = x.CheckInTimeStamp.ToString(),
+                            RegNumber = x.RegNumber,
+                            Type = x.Type.Type
+                        }
+                        ).ToList();
+
+            foreach (var item in list)
+            {
+                var parkingString = "";
+
+                var checkIn = DateTime.Parse(item.ParkingTime);
+                var now = DateTime.Now;
+
+                var timeSpan = now.Subtract(checkIn);
+
+                var days = timeSpan.Days;
+                if (days > 0) parkingString += $"Days: {days}, ";
+
+                var hours = timeSpan.Hours;
+                if (hours > 0) parkingString += $"Hours: {hours}, ";
+
+                var minutes = timeSpan.Minutes;
+                if (minutes > 0) parkingString += $"Minutes: {minutes} ";
+
+                item.ParkingTime = parkingString;
+            }
+
+            return list;
+        }
+
+
         // GET: Vehicles/Create
         public ActionResult Create()
         {
-            ViewBag.MemberId = new SelectList(db.Members, "Id", "FirstName");
+            ViewBag.MemberId = new SelectList(db.Members, "Id", "FullName");
             ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type");
             return View();
         }
@@ -59,7 +131,7 @@ namespace Garage2.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.MemberId = new SelectList(db.Members, "Id", "FirstName", vehicle.MemberId);
+            ViewBag.MemberId = new SelectList(db.Members, "Id", "FullName", vehicle.MemberId);
             ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type", vehicle.VehicleTypeId);
             return View(vehicle);
         }
