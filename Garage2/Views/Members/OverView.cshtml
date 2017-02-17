@@ -5,10 +5,31 @@
 }
 
 <h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="container form-container">
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                @Html.Label("SocialSecurityNumber")
+                @Html.TextBox("socialNr", "", new { @class = "form-control" })
+                @Html.Label("First name")
+                @Html.TextBox("fName", "", new { @class = "form-control" })
+            </div>
+            <div class="col-sm-6 col-md-4">
+                @Html.Label("Last name")
+                @Html.TextBox("lName", "", new { @class = "form-control" })
+                @Html.Label("Date of birth")
+                <input name="birth" type="date" class="form-control" value=@ViewBag.time>
+            </div>
+        </div>
+        <div class="btn-group search">
+            <input type="submit" name="search" value="Search" class="btn btn-default" />
+            <input type="submit" name="show" value="Show all" class="btn btn-default" />
+        </div>
+    </div>
+}
 <table class="table">
     <tr>
         <th>

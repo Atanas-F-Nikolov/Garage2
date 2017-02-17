@@ -16,9 +16,27 @@ namespace Garage2.Controllers
         private Garage2Context db = new Garage2Context();
 
         // GET: Members
-        public ActionResult Index()
+        public ActionResult OverView()
         {
             return View(db.Members.ToList());
+        }
+
+        public ActionResult DoesUserExist(string SocialSecurityNumber) => Json(!db.Members.Any(x => x.SocialSecurityNumber.Equals(SocialSecurityNumber)), JsonRequestBehavior.AllowGet);
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult OverView(string socialNr, string fName, string lName, DateTime? birth)
+        {
+            var list = db.Members.ToList();
+
+            list = list
+                .Where(x => (!string.IsNullOrWhiteSpace(socialNr)) ? x.SocialSecurityNumber.ToLower().Contains(socialNr.ToLower()) : true)
+                .Where(x => (!string.IsNullOrWhiteSpace(fName)) ? x.FirstName.ToLower().Contains(fName.ToLower()) : true)
+                .Where(x => (!string.IsNullOrWhiteSpace(lName)) ? x.LastName.ToLower().Contains(lName.ToLower()) : true)
+                .Where(x => (birth != null) ? x.DateOfBirth.Date.Equals(birth.Value.Date) : true)
+                .ToList();
+
+            return View(list);
         }
 
         // GET: Members/Details/5
@@ -53,7 +71,7 @@ namespace Garage2.Controllers
             {
                 db.Members.Add(member);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("OverView");
             }
 
             return View(member);
@@ -85,7 +103,7 @@ namespace Garage2.Controllers
             {
                 db.Entry(member).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("OverView");
             }
             return View(member);
         }
@@ -113,7 +131,7 @@ namespace Garage2.Controllers
             Member member = db.Members.Find(id);
             db.Members.Remove(member);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("OverView");
         }
 
         protected override void Dispose(bool disposing)
