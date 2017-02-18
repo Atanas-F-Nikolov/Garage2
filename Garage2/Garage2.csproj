@@ -146,6 +146,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CheckInViewModel.cs" />
+    <Compile Include="Models\FreeSpaces.cs" />
     <Compile Include="Models\GroupByTypeStatistics.cs" />
     <Compile Include="Models\Member.cs" />
     <Compile Include="Models\OverViewDetailsModel.cs" />
@@ -153,7 +154,10 @@
     <Compile Include="Models\Receipt.cs" />
     <Compile Include="Models\Statistics.cs" />
     <Compile Include="Models\Vehicle.cs" />
+    <Compile Include="Models\VehicleCreateViewModel.cs" />
+    <Compile Include="Models\VehicleDetailSearchParams.cs" />
     <Compile Include="Models\VehicleDetailsViewModel.cs" />
+    <Compile Include="Models\VehicleIndexViewModel.cs" />
     <Compile Include="Models\VehicleType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

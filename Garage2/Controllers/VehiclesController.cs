@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using Garage2.DAL;
 using Garage2.Models;
@@ -14,46 +13,48 @@ namespace Garage2.Controllers
     public class VehiclesController : Controller
     {
         private Garage2Context db = new Garage2Context();
+        private int garageSize = 30;
+        private string motorCycle = "Motorcycle";
 
         // GET: Vehicles
-        public ActionResult Index()
+        public ActionResult Index(int? createdVehicleId, string msg, string title = "List of vehicles")
         {
-            var vehicles = db.Vehicles;
-            ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type");
-            return View(vehicles.ToList());
+            var vehicles = db.Vehicles.OrderByDescending(x => x.Id);
+            return View(new VehicleIndexViewModel
+            {
+                VehicleTypes = new SelectList(db.VehicleTypes, "Id", "Type"),
+                Title = title,
+                Vehicles = vehicles.ToList(),
+                CreatedVehicleId = createdVehicleId,
+                Message = msg
+            });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(string regNr, int? VehicleTypeId)
+        public ActionResult Index([Bind(Include = "RegNr,CheckIn,Color,Brand,Model,Wheels,VehicleTypeId,Owner")] VehicleDetailSearchParams searchParams, string title = "List of vehicles")
         {
             var vehicles = db.Vehicles.ToList();
-            vehicles = SearchInList(regNr, VehicleTypeId, vehicles);
-            return View(vehicles);
-        }
 
-        private List<Vehicle> SearchInList(string regNr, int? VehicleTypeId, List<Vehicle> vehicles)
-        {
-            vehicles = vehicles
-                .Where(x => (!string.IsNullOrWhiteSpace(regNr)) ? x.RegNumber.ToLower().Contains(regNr.ToLower()) : true)
-                .Where(x => (VehicleTypeId != null) ? x.Type.Id.Equals(VehicleTypeId) : true).ToList();
-            ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type");
-            return vehicles;
-        }
+            if (Request.Form["show"] != null)
+            {
+                ModelState.Clear();
+            }
+            else
+            {
+                vehicles = vehicles
+                           .Where(x => (!string.IsNullOrWhiteSpace(searchParams.RegNr)) ? x.RegNumber.ToLower().Contains(searchParams.RegNr.ToLower()) : true)
+                           .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Owner)) ? x.Owner.FullName.ToLower().Contains(searchParams.Owner.ToLower()) : true)
+                           .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Model)) ? x.Model.ToLower().Contains(searchParams.Model.ToLower()) : true)
+                           .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Color)) ? x.Color.ToLower().Contains(searchParams.Color.ToLower()) : true)
+                           .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Brand)) ? x.Brand.ToLower().Contains(searchParams.Brand.ToLower()) : true)
+                           .Where(x => (searchParams.VehicleTypeId != null) ? x.Type.Id.Equals(searchParams.VehicleTypeId) : true)
+                           .Where(x => (searchParams.Wheels != null) ? x.Wheels.Equals(searchParams.Wheels) : true)
+                           .Where(x => (searchParams.CheckIn != null) ? x.CheckInTimeStamp.Date.Equals(searchParams.CheckIn.Value.Date) : true)
+                           .ToList();
+            }
 
-        // GET: Vehicles/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Vehicle vehicle = db.Vehicles.Find(id);
-            if (vehicle == null)
-            {
-                return HttpNotFound();
-            }
-            return View(vehicle);
+            return View(new VehicleIndexViewModel { VehicleTypes = new SelectList(db.VehicleTypes, "Id", "Type"), Vehicles = vehicles, Title = title });
         }
 
         [HttpPost]
@@ -61,10 +62,16 @@ namespace Garage2.Controllers
         public ActionResult BasicOverView(string regNr, int? VehicleTypeId)
         {
             List<VehicleDetailsViewModel> list = CreateViewModelList();
-            list = list
-                .Where(x => (!string.IsNullOrWhiteSpace(regNr)) ? x.RegNumber.ToLower().Contains(regNr.ToLower()) : true)
-                .Where(x => (VehicleTypeId != null) ? x.TypeId.Equals(VehicleTypeId) : true).ToList();
-
+            if (Request.Form["show"] != null)
+            {
+                ModelState.Clear();
+            }
+            else
+            {
+                list = list
+                       .Where(x => (!string.IsNullOrWhiteSpace(regNr)) ? x.RegNumber.ToLower().Contains(regNr.ToLower()) : true)
+                       .Where(x => (VehicleTypeId != null) ? x.TypeId.Equals(VehicleTypeId) : true).ToList();
+            }
             ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type");
             return View(list);
         }
@@ -114,13 +121,29 @@ namespace Garage2.Controllers
             return list;
         }
 
+        // GET: Vehicles/Details/5
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Vehicle vehicle = db.Vehicles.Find(id);
+            if (vehicle == null)
+            {
+                return HttpNotFound();
+            }
+            return View(vehicle);
+        }
 
         // GET: Vehicles/Create
         public ActionResult Create()
         {
-            ViewBag.MemberId = new SelectList(db.Members, "Id", "FullName");
-            ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type");
-            return View();
+            return View(new VehicleCreateViewModel
+            {
+                VehicleTypes = new SelectList(db.VehicleTypes, "Id", "Type"),
+                Owners = new SelectList(db.Members, "Id", "FullName")
+            });
         }
 
         // POST: Vehicles/Create
@@ -128,18 +151,114 @@ namespace Garage2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ParkingSpace,Size,RegNumber,Color,Brand,Model,Wheels,CheckInTimeStamp,VehicleTypeId,MemberId")] Vehicle vehicle)
+        public ActionResult Create([Bind(Include = "Id,Type,RegNumber,Color,Brand,Model,Wheels,VehicleTypeId,MemberId")] Vehicle vehicle)
         {
             if (ModelState.IsValid)
             {
-                db.Vehicles.Add(vehicle);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                int parking = -1;
+                var type = db.VehicleTypes.Find(vehicle.VehicleTypeId);
+                if (type.Type == motorCycle) parking = GetParkingSpaceForMotorCycle();
+                else parking = GetParkingSpace(type.Size);
+
+                if (parking > 0)
+                {
+                    vehicle.ParkingSpace = parking;
+                    db.Vehicles.Add(vehicle);
+                    db.SaveChanges();
+                    return RedirectToAction("Index", new { createdVehicleId = vehicle.Id, msg = $"Your {type.Type} has been parked successfully" });
+                }
+                else ModelState.AddModelError("", $"There is no space in the garage for your {type}");
             }
 
-            ViewBag.MemberId = new SelectList(db.Members, "Id", "FullName", vehicle.MemberId);
-            ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type", vehicle.VehicleTypeId);
-            return View(vehicle);
+            return View(new VehicleCreateViewModel
+            {
+                Vehicle = vehicle,
+                Spaces = GetFreeSpaces(),
+                VehicleTypes = new SelectList(db.VehicleTypes, "Id", "Type", vehicle.VehicleTypeId),
+                Owners = new SelectList(db.Members, "Id", "FullName", vehicle.MemberId)
+            });
+        }
+
+        private int GetParkingSpace(int size)
+        {
+            var spaces = db.Vehicles.Select(x => new
+            {
+                space = x.ParkingSpace,
+                size = x.Type.Size
+            }).Distinct().OrderBy(x => x.space).ToList();
+
+            var currentSpace = 1;
+
+            int[] requiredSpaces = new int[size];
+            int[] testSpaces;
+            foreach (var item in spaces)
+            {
+                testSpaces = new int[item.size];
+
+                for (int i = 0; i < size; i++) requiredSpaces[i] = currentSpace + i;
+                for (int i = 0; i < item.size; i++) testSpaces[i] = item.space + i;
+
+                if (requiredSpaces.Any(x => testSpaces.Contains(x))) currentSpace = (item.space + item.size);
+                else break;
+            }
+
+            if (currentSpace + (size - 1) > garageSize) currentSpace = -1;
+
+            return currentSpace;
+        }
+
+        private int GetParkingSpaceForMotorCycle()
+        {
+            var spaces = db.Vehicles.Where(x => x.Type.Type == motorCycle)
+                .GroupBy(g => g.ParkingSpace)
+                .Select(y => new { Space = y.Key, Count = y.Count() }).ToList();
+
+            foreach (var parkingSpace in spaces)
+            {
+                if (parkingSpace.Count < 3)
+                {
+                    return parkingSpace.Space;
+                }
+            }
+            return GetParkingSpace(1);
+        }
+
+        private FreeSpaces GetFreeSpaces()
+        {
+            var freeSpacesDetails = new FreeSpaces();
+            freeSpacesDetails.AllSpaces = garageSize;
+
+            var freeSpaces = 0;
+
+            var spaces = db.Vehicles
+                .Select(x => new
+                {
+                    space = x.ParkingSpace,
+                    size = x.Type.Size
+                }).Distinct().ToList();
+
+            var count = garageSize;
+            foreach (var item in spaces) count -= item.size;
+
+            if (count < 0) { freeSpacesDetails.RegularSpaces = 0; }
+            else { freeSpacesDetails.RegularSpaces = count; }
+
+            freeSpaces = count;
+            count = 0;
+
+            var motorcycleSpaces = db.Vehicles.Where(x => x.Type.Type == motorCycle)
+                .GroupBy(g => g.ParkingSpace)
+                .Select(y => new { Space = y.Key, Count = y.Count() }).ToList();
+
+            foreach (var item in motorcycleSpaces)
+            {
+                if (item.Count < 3) count += (3 - item.Count);
+            }
+
+            freeSpaces += count;
+            freeSpacesDetails.MotorSpaces = count;
+
+            return freeSpacesDetails;
         }
 
         // GET: Vehicles/Edit/5

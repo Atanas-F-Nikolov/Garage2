@@ -1,15 +1,17 @@
-﻿@model IEnumerable<Garage2.Models.Vehicle>
+﻿@model Garage2.Models.VehicleIndexViewModel
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>@Model.Title</h2>
+<h4>@Model.Message</h4>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     <div class="container form-container">
+        @Html.HiddenFor(x => x.Title)
         <div class="row">
             <div class="col-sm-6 col-md-4">
                 @Html.Label("Registration number")
@@ -17,7 +19,34 @@
             </div>
             <div class="col-sm-6 col-md-4">
                 @Html.Label("Type")
-                @Html.DropDownList("VehicleTypeId", null, "All", htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("VehicleTypeId", Model.VehicleTypes, "All", htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+        <p data-toggle="collapse" data-target="#options" class="fake-link">Toggle advanced search</p>
+        <div id="options" class="well row collapse">
+            <div class="col-sm-4">
+                @Html.Label("Color")
+                @Html.TextBox("Color", "", new { @class = "form-control" })
+            </div>
+            <div class="col-sm-4">
+                @Html.Label("Brand")
+                @Html.TextBox("Brand", "", new { @class = "form-control" })
+            </div>
+            <div class="col-sm-4">
+                @Html.Label("Model")
+                @Html.TextBox("Model", "", new { @class = "form-control" })
+            </div>
+            <div class="col-sm-4">
+                @Html.Label("Number of wheels")
+                <input type="number" name="Wheels" class="form-control" />
+            </div>
+            <div class="col-sm-4">
+                @Html.Label("Owner name")
+                @Html.TextBox("Owner", "", new { @class = "form-control" })
+            </div>
+            <div class="col-sm-4">
+                @Html.Label("Check in date")
+                <input type="date" name="CheckIn" class="form-control" />
             </div>
         </div>
         <div class="btn-group search">
@@ -27,79 +56,134 @@
     </div>
 }
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Owner)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Type.Type)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ParkingSpace)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Type.Size)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RegNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Color)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Brand)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Model)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Wheels)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CheckInTimeStamp)
-        </th>
-        <th></th>
-    </tr>
+@if (Model.Vehicles.Count > 0)
+{
+    <table class="table">
+        @foreach (var item in Model.Vehicles.Take(1))
+        {
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => item.Owner)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => item.Type.Type)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => item.ParkingSpace)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => item.Type.Size)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => item.RegNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => item.Color)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => item.Brand)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => item.Model)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => item.Wheels)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => item.CheckInTimeStamp)
+                </th>
+                <th></th>
+            </tr>
+        }
+        @foreach (var item in Model.Vehicles)
+        {
+            if (Model.CreatedVehicleId == item.Id)
+            {
+                <tr class="success">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Owner.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ParkingSpace)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type.Size)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RegNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Color)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Brand)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Model)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Wheels)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CheckInTimeStamp)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Owner.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ParkingSpace)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type.Size)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RegNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Color)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Brand)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Model)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Wheels)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CheckInTimeStamp)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Owner.FullName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Type.Type)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ParkingSpace)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Type.Size)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RegNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Color)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Brand)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Model)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Wheels)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CheckInTimeStamp)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+
+        }
+    </table>
+}
+else
+{
+    <h1>Could not find any vehicles that matched your search</h1>
 }
 
-</table>

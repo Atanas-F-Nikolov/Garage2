@@ -66,6 +66,16 @@ textarea {
     text-align: center;
 }
 
+.fake-link {
+    color: #428bca;
+}
+
+    .fake-link:hover {
+        color: #2a6496;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
 .details-btn {
     display: inline;
     color: #428bca;
