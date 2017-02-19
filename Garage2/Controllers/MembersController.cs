@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Garage2.DAL;
 using Garage2.Models;
+using System.Linq.Dynamic;
+using System.Linq;
 
 namespace Garage2.Controllers
 {
@@ -16,27 +17,70 @@ namespace Garage2.Controllers
         private Garage2Context db = new Garage2Context();
 
         // GET: Members
-        public ActionResult OverView()
+        public ActionResult OverView(string msg, bool hasAddedMember = false, string sort = "", string title = "List of members", [Bind(Include = "SocialNr,FirstName,LastName,DateOfBirth")] MemberSearchParams searchParams = null)
         {
-            return View(db.Members.ToList());
+            List<Member> membersList = db.Members.ToList(); ;
+
+            if (searchParams != null)
+            {
+                membersList = SearchInList(searchParams, membersList);
+            }
+            else
+            {
+                searchParams = new MemberSearchParams();
+            }
+
+            membersList = SortList(ref sort, membersList);
+
+            return View(new MembersOverViewViewModel { Title = title, Members = membersList, Sort = sort, HasAddedMember = hasAddedMember, Message = msg, SearchParams = searchParams });
+        }
+
+        private List<Member> SortList(ref string sort, List<Member> membersList)
+        {
+            if (!string.IsNullOrWhiteSpace(sort))
+            {
+                sort = sort.Replace("_", " ");
+                membersList = membersList.OrderBy(sort).ToList();
+                sort = (sort.Contains("descending") ? sort.Substring(0, sort.IndexOf(" ")) : sort + "_descending");
+                return membersList;
+            }
+            else
+            {
+                return membersList.OrderByDescending(x => x.Id).ToList();
+            }
         }
 
         public ActionResult DoesUserExist(string SocialSecurityNumber) => Json(!db.Members.Any(x => x.SocialSecurityNumber.Equals(SocialSecurityNumber)), JsonRequestBehavior.AllowGet);
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult OverView(string socialNr, string fName, string lName, DateTime? birth)
+        public ActionResult OverView(MemberSearchParams searchParams, string sort)
         {
             var list = db.Members.ToList();
 
-            list = list
-                .Where(x => (!string.IsNullOrWhiteSpace(socialNr)) ? x.SocialSecurityNumber.ToLower().Contains(socialNr.ToLower()) : true)
-                .Where(x => (!string.IsNullOrWhiteSpace(fName)) ? x.FirstName.ToLower().Contains(fName.ToLower()) : true)
-                .Where(x => (!string.IsNullOrWhiteSpace(lName)) ? x.LastName.ToLower().Contains(lName.ToLower()) : true)
-                .Where(x => (birth != null) ? x.DateOfBirth.Date.Equals(birth.Value.Date) : true)
-                .ToList();
+            if (Request.Form["show"] != null)
+            {
+                ModelState.Clear();
+            }
+            else
+            {
+                list = SearchInList(searchParams, list);
+            }
 
-            return View(list);
+            list = SortList(ref sort, list);
+            
+            return View(new MembersOverViewViewModel { Members = list, SearchParams = searchParams, Sort = sort});
+        }
+
+        private static List<Member> SearchInList(MemberSearchParams searchParams, List<Member> list)
+        {
+            list = list
+                .Where(x => (!string.IsNullOrWhiteSpace(searchParams.SocialNr)) ? x.SocialSecurityNumber.ToLower().Contains(searchParams.SocialNr.ToLower()) : true)
+                .Where(x => (!string.IsNullOrWhiteSpace(searchParams.FirstName)) ? x.FirstName.ToLower().Contains(searchParams.FirstName.ToLower()) : true)
+                .Where(x => (!string.IsNullOrWhiteSpace(searchParams.LastName)) ? x.LastName.ToLower().Contains(searchParams.LastName.ToLower()) : true)
+                .Where(x => (searchParams.DateOfBirth != null) ? x.DateOfBirth.Date.Equals(searchParams.DateOfBirth.Value.Date) : true)
+                .ToList();
+            return list;
         }
 
         // GET: Members/Details/5
@@ -71,7 +115,7 @@ namespace Garage2.Controllers
             {
                 db.Members.Add(member);
                 db.SaveChanges();
-                return RedirectToAction("OverView");
+                return RedirectToAction("OverView", new { hasAddedMember = true, msg = $"{member.FullName} has been added successfully"});
             }
 
             return View(member);

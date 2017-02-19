@@ -1,27 +1,31 @@
-﻿@model IEnumerable<Garage2.Models.Member>
+﻿@model Garage2.Models.MembersOverViewViewModel
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>@Model.Title</h2>
+<h4>@Model.Message</h4>
 <hr />
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+
     <div class="container form-container">
         <div class="row">
+            '
+            @Html.HiddenFor(x => x.Sort)
             <div class="col-sm-6 col-md-4">
                 @Html.Label("SocialSecurityNumber")
-                @Html.TextBox("socialNr", "", new { @class = "form-control" })
+                @Html.TextBox("SocialNr", "", new { @class = "form-control" })
                 @Html.Label("First name")
-                @Html.TextBox("fName", "", new { @class = "form-control" })
+                @Html.TextBox("FirstName", "", new { @class = "form-control" })
             </div>
             <div class="col-sm-6 col-md-4">
                 @Html.Label("Last name")
-                @Html.TextBox("lName", "", new { @class = "form-control" })
+                @Html.TextBox("LastName", "", new { @class = "form-control" })
                 @Html.Label("Date of birth")
-                <input name="birth" type="date" class="form-control" value=@ViewBag.time>
+                <input name="DateOfBirth" type="date" class="form-control" value=@ViewBag.time>
             </div>
         </div>
         <div class="btn-group search">
@@ -33,22 +37,31 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.SocialSecurityNumber)
+            @Html.ActionLink(Html.DisplayNameFor(model => model.Member.SocialSecurityNumber).ToString(), "OverView", "Members", new { SocialNr = Model.SearchParams.SocialNr, FirstName = Model.SearchParams.FirstName, LastName = Model.SearchParams.LastName, DateOfBirth = Model.SearchParams.DateOfBirth, sort = (Model.Sort.Contains("Social") ? Model.Sort : "SocialSecurityNumber") }, null)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstName)
+            @Html.ActionLink(Html.DisplayNameFor(model => model.Member.FirstName).ToString(), "OverView", "Members", new { SocialNr = Model.SearchParams.SocialNr, FirstName = Model.SearchParams.FirstName, LastName = Model.SearchParams.LastName, DateOfBirth = Model.SearchParams.DateOfBirth, sort = (Model.Sort.Contains("First") ? Model.Sort : "FirstName") }, null)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.LastName)
+            @Html.ActionLink(Html.DisplayNameFor(model => model.Member.LastName).ToString(), "OverView", "Members", new { SocialNr = Model.SearchParams.SocialNr, FirstName = Model.SearchParams.FirstName, LastName = Model.SearchParams.LastName, DateOfBirth = Model.SearchParams.DateOfBirth, sort = (Model.Sort.Contains("Last") ? Model.Sort : "LastName") }, null)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DateOfBirth)
+            @Html.ActionLink(Html.DisplayNameFor(model => model.Member.DateOfBirth).ToString(), "OverView", "Members", new { SocialNr = Model.SearchParams.SocialNr, FirstName = Model.SearchParams.FirstName, LastName = Model.SearchParams.LastName, DateOfBirth = Model.SearchParams.DateOfBirth, sort = (Model.Sort.Contains("Birth") ? Model.Sort : "DateOfBirth") }, null)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
+    @foreach (var item in Model.Members)
+    {
+        if (Model.HasAddedMember.Equals(true))
+        {
+            @:<tr class="success">
+            Model.HasAddedMember = false;
+        }
+        else
+        {
+            @:<tr>
+        }
         <td>
             @Html.DisplayFor(modelItem => item.SocialSecurityNumber)
         </td>
@@ -62,11 +75,11 @@
             @Html.DisplayFor(modelItem => item.DateOfBirth)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
         </td>
-    </tr>
+        @:</tr>
 }
 
 </table>
