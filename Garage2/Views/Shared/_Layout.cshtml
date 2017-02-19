@@ -28,7 +28,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink("Check-in", "Create", "Vehicles")</li>
-                            <li>@Html.ActionLink("Check-out", "Index", "Vehicles", new { Index = "Select vehicle to check-out" }, null)</li>
+                            <li>@Html.ActionLink("Check-out", "Index", "Vehicles", new { title = "Select vehicle to check-out" }, null)</li>
                             <li role="separator" class="divider"></li>
                             <li>@Html.ActionLink("Basic overview", "BasicOverView", "Vehicles")</li>
                             <li>@Html.ActionLink("Detailed overview", "Index", "Vehicles")</li>

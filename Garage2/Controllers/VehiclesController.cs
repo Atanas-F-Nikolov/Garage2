@@ -84,9 +84,9 @@ namespace Garage2.Controllers
             vehicles = vehicles
                        .Where(x => (!string.IsNullOrWhiteSpace(searchParams.RegNr)) ? x.RegNumber.ToLower().Contains(searchParams.RegNr.ToLower()) : true)
                        .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Owner)) ? x.Owner.FullName.ToLower().Contains(searchParams.Owner.ToLower()) : true)
-                       .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Model)) ? x.Model.ToLower().Contains(searchParams.Model.ToLower()) : true)
-                       .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Color)) ? x.Color.ToLower().Contains(searchParams.Color.ToLower()) : true)
-                       .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Brand)) ? x.Brand.ToLower().Contains(searchParams.Brand.ToLower()) : true)
+                       .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Model) && x.Model != null) ? x.Model.ToLower().Contains(searchParams.Model.ToLower()) : true)
+                       .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Color) && x.Color != null) ? x.Color.ToLower().Contains(searchParams.Color.ToLower()) : true)
+                       .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Brand) && x.Brand != null) ? x.Brand.ToLower().Contains(searchParams.Brand.ToLower()) : true)
                        .Where(x => (searchParams.VehicleTypeId != null) ? x.Type.Id.Equals(searchParams.VehicleTypeId) : true)
                        .Where(x => (searchParams.Wheels != null) ? x.Wheels.Equals(searchParams.Wheels) : true)
                        .Where(x => (searchParams.CheckIn != null) ? x.CheckInTimeStamp.Date.Equals(searchParams.CheckIn.Value.Date) : true)

@@ -6,7 +6,7 @@
 
 <h2>@Model.Title</h2>
 <h4>@Model.Message</h4>
-
+<hr />
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -61,34 +61,34 @@
     <table class="table">
         <tr>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Owner).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("Owner")? Model.Sort : "Owner"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Owner).ToString(), "Index", "Vehicles", new { title = Model.Title, sort = (Model.Sort.Contains("Owner")? Model.Sort : "Owner"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Type).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("Type") ? Model.Sort : "Type"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Type).ToString(), "Index", "Vehicles", new { title = Model.Title, sort = (Model.Sort.Contains("Type") ? Model.Sort : "Type"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.ParkingSpace).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("ParkingSpace") ? Model.Sort : "ParkingSpace"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.ParkingSpace).ToString(), "Index", "Vehicles", new { title = Model.Title, sort = (Model.Sort.Contains("ParkingSpace") ? Model.Sort : "ParkingSpace"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Type.Size).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("Size") ? Model.Sort : "Size"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Type.Size).ToString(), "Index", "Vehicles", new { title = Model.Title, sort = (Model.Sort.Contains("Size") ? Model.Sort : "Size"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.RegNumber).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("RegNumber") ? Model.Sort : "RegNumber"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.RegNumber).ToString(), "Index", "Vehicles", new { title = Model.Title, sort = (Model.Sort.Contains("RegNumber") ? Model.Sort : "RegNumber"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Color).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("Color") ? Model.Sort : "Color"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Color).ToString(), "Index", "Vehicles", new { title = Model.Title, sort = (Model.Sort.Contains("Color") ? Model.Sort : "Color"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Brand).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("Brand") ? Model.Sort : "Brand"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Brand).ToString(), "Index", "Vehicles", new { title = Model.Title, sort = (Model.Sort.Contains("Brand") ? Model.Sort : "Brand"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Model).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("Model") ? Model.Sort : "Model"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Model).ToString(), "Index", "Vehicles", new { title = Model.Title, sort = (Model.Sort.Contains("Model") ? Model.Sort : "Model"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Wheels).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("Wheels") ? Model.Sort : "Wheels"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Wheels).ToString(), "Index", "Vehicles", new { title = Model.Title, sort = (Model.Sort.Contains("Wheels") ? Model.Sort : "Wheels"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.CheckInTimeStamp).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("CheckInTimeStamp") ? Model.Sort : "CheckInTimeStamp"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.CheckInTimeStamp).ToString(), "Index", "Vehicles", new { title = Model.Title, sort = (Model.Sort.Contains("CheckInTimeStamp") ? Model.Sort : "CheckInTimeStamp"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
             </th>
             <th></th>
         </tr>
