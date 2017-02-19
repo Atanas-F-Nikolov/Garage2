@@ -23,7 +23,7 @@
             </div>
         </div>
         <p data-toggle="collapse" data-target="#options" class="fake-link">Toggle advanced search</p>
-        <div id="options" class="well row collapse">
+        <div id="options" class="well well-sm row collapse">
             <div class="col-sm-4">
                 @Html.Label("Color")
                 @Html.TextBox("Color", "", new { @class = "form-control" })
@@ -59,87 +59,49 @@
 @if (Model.Vehicles.Count > 0)
 {
     <table class="table">
-        @foreach (var item in Model.Vehicles.Take(1))
-        {
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => item.Owner)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.Type.Type)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.ParkingSpace)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.Type.Size)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.RegNumber)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.Color)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.Brand)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.Model)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.Wheels)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.CheckInTimeStamp)
-                </th>
-                <th></th>
-            </tr>
-        }
+        <tr>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Owner).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("Owner")? Model.Sort : "Owner"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Type).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("Type") ? Model.Sort : "Type"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.ParkingSpace).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("ParkingSpace") ? Model.Sort : "ParkingSpace"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Type.Size).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("Size") ? Model.Sort : "Size"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.RegNumber).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("RegNumber") ? Model.Sort : "RegNumber"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Color).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("Color") ? Model.Sort : "Color"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Brand).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("Brand") ? Model.Sort : "Brand"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Model).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("Model") ? Model.Sort : "Model"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Wheels).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("Wheels") ? Model.Sort : "Wheels"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.CheckInTimeStamp).ToString(), "Index", "Vehicles", new { sort = (Model.Sort.Contains("CheckInTimeStamp") ? Model.Sort : "CheckInTimeStamp"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)
+            </th>
+            <th></th>
+        </tr>
         @foreach (var item in Model.Vehicles)
         {
-            if (Model.CreatedVehicleId == item.Id)
+            if (Model.HasAddedVehicle.Equals(true))
             {
-                <tr class="success">
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Owner.FullName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Type.Type)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ParkingSpace)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Type.Size)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RegNumber)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Color)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Brand)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Model)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Wheels)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CheckInTimeStamp)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                    </td>
-                </tr>
+                @:<tr class="success">
             }
             else
             {
-                <tr>
+                @:<tr>
+            }
                     <td>
                         @Html.DisplayFor(modelItem => item.Owner.FullName)
                     </td>
@@ -147,7 +109,14 @@
                         @Html.DisplayFor(modelItem => item.Type.Type)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ParkingSpace)
+                        @if (item.Type.Size > 1)
+                        {
+                            @Html.DisplayFor(modelItem => item.ParkingSpace) @:- @(item.ParkingSpace + item.Type.Size - 1)
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.ParkingSpace)
+                        }
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Type.Size)
@@ -175,11 +144,8 @@
                         @Html.ActionLink("Details", "Details", new { id = item.Id }) |
                         @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                     </td>
-                </tr>
-            }
-
-
-        }
+                @:</tr>
+                }
     </table>
 }
 else

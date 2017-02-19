@@ -149,6 +149,8 @@
     <Compile Include="Models\FreeSpaces.cs" />
     <Compile Include="Models\GroupByTypeStatistics.cs" />
     <Compile Include="Models\Member.cs" />
+    <Compile Include="Models\MemberSearchParams.cs" />
+    <Compile Include="Models\MembersOverViewViewModel.cs" />
     <Compile Include="Models\OverViewDetailsModel.cs" />
     <Compile Include="Models\OverViewModel.cs" />
     <Compile Include="Models\Receipt.cs" />

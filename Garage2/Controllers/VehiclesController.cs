@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Net;
 using System.Web.Mvc;
 using Garage2.DAL;
@@ -17,44 +18,80 @@ namespace Garage2.Controllers
         private string motorCycle = "Motorcycle";
 
         // GET: Vehicles
-        public ActionResult Index(int? createdVehicleId, string msg, string title = "List of vehicles")
+        public ActionResult Index(string msg, bool hasAddedVehicle = false, string title = "List of vehicles", string sort = "", [Bind(Include = "RegNr,CheckIn,Color,Brand,Model,Wheels,Owner,VehicleTypeId")] VehicleDetailSearchParams searchParams = null)
         {
-            var vehicles = db.Vehicles.OrderByDescending(x => x.Id);
+            List<Vehicle> vehicles = db.Vehicles.ToList();
+
+            if (searchParams != null)
+            {
+                vehicles = SearchInList(searchParams, vehicles);
+            }
+            else
+            {
+                searchParams = new VehicleDetailSearchParams();
+            }
+
+            vehicles = SortList(ref sort, vehicles);
+
             return View(new VehicleIndexViewModel
             {
+                SearchParams = searchParams,
+                Sort = sort,
                 VehicleTypes = new SelectList(db.VehicleTypes, "Id", "Type"),
                 Title = title,
                 Vehicles = vehicles.ToList(),
-                CreatedVehicleId = createdVehicleId,
+                HasAddedVehicle = hasAddedVehicle,
                 Message = msg
             });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Index([Bind(Include = "RegNr,CheckIn,Color,Brand,Model,Wheels,VehicleTypeId,Owner")] VehicleDetailSearchParams searchParams, string title = "List of vehicles")
+        private List<Vehicle> SortList(ref string sort, List<Vehicle> vehicleList)
         {
-            var vehicles = db.Vehicles.ToList();
-
-            if (Request.Form["show"] != null)
+            if (!string.IsNullOrWhiteSpace(sort))
             {
-                ModelState.Clear();
+                sort = sort.Replace("_", " ");
+
+                if (sort.Contains("Owner")) vehicleList = (sort.Contains("descending") ? vehicleList.OrderByDescending(x => x.Owner.FullName).ToList() : vehicleList.OrderBy(x => x.Owner.FullName).ToList());
+                else if (sort.Contains("Size")) vehicleList = (sort.Contains("descending") ? vehicleList.OrderByDescending(x => x.Type.Size).ToList() : vehicleList.OrderBy(x => x.Type.Size).ToList());
+                else if (sort.Contains("Type")) vehicleList = (sort.Contains("descending") ? vehicleList.OrderByDescending(x => x.Type.Type).ToList() : vehicleList.OrderBy(x => x.Type.Type).ToList());
+                else vehicleList = vehicleList.OrderBy(sort).ToList();
+
+                sort = (sort.Contains("descending") ? sort.Substring(0, sort.IndexOf(" ")) : sort + "_descending");
+                return vehicleList;
             }
             else
             {
-                vehicles = vehicles
-                           .Where(x => (!string.IsNullOrWhiteSpace(searchParams.RegNr)) ? x.RegNumber.ToLower().Contains(searchParams.RegNr.ToLower()) : true)
-                           .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Owner)) ? x.Owner.FullName.ToLower().Contains(searchParams.Owner.ToLower()) : true)
-                           .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Model)) ? x.Model.ToLower().Contains(searchParams.Model.ToLower()) : true)
-                           .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Color)) ? x.Color.ToLower().Contains(searchParams.Color.ToLower()) : true)
-                           .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Brand)) ? x.Brand.ToLower().Contains(searchParams.Brand.ToLower()) : true)
-                           .Where(x => (searchParams.VehicleTypeId != null) ? x.Type.Id.Equals(searchParams.VehicleTypeId) : true)
-                           .Where(x => (searchParams.Wheels != null) ? x.Wheels.Equals(searchParams.Wheels) : true)
-                           .Where(x => (searchParams.CheckIn != null) ? x.CheckInTimeStamp.Date.Equals(searchParams.CheckIn.Value.Date) : true)
-                           .ToList();
+                return vehicleList.OrderByDescending(x => x.Id).ToList();
             }
+        }
 
-            return View(new VehicleIndexViewModel { VehicleTypes = new SelectList(db.VehicleTypes, "Id", "Type"), Vehicles = vehicles, Title = title });
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(VehicleDetailSearchParams searchParams, string title = "List of vehicles")
+        {
+            var vehicles = db.Vehicles.ToList();
+            string sort = "";
+            vehicles = SortList(ref sort, vehicles);
+
+            if (Request.Form["show"] != null) ModelState.Clear();
+            else vehicles = SearchInList(searchParams, vehicles);
+
+            return View(new VehicleIndexViewModel { SearchParams = (searchParams != null) ? searchParams : new VehicleDetailSearchParams(), Sort = "", VehicleTypes = new SelectList(db.VehicleTypes, "Id", "Type"), Vehicles = vehicles, Title = title });
+        }
+
+        private static List<Vehicle> SearchInList(VehicleDetailSearchParams searchParams, List<Vehicle> vehicles)
+        {
+            vehicles = vehicles
+                       .Where(x => (!string.IsNullOrWhiteSpace(searchParams.RegNr)) ? x.RegNumber.ToLower().Contains(searchParams.RegNr.ToLower()) : true)
+                       .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Owner)) ? x.Owner.FullName.ToLower().Contains(searchParams.Owner.ToLower()) : true)
+                       .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Model)) ? x.Model.ToLower().Contains(searchParams.Model.ToLower()) : true)
+                       .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Color)) ? x.Color.ToLower().Contains(searchParams.Color.ToLower()) : true)
+                       .Where(x => (!string.IsNullOrWhiteSpace(searchParams.Brand)) ? x.Brand.ToLower().Contains(searchParams.Brand.ToLower()) : true)
+                       .Where(x => (searchParams.VehicleTypeId != null) ? x.Type.Id.Equals(searchParams.VehicleTypeId) : true)
+                       .Where(x => (searchParams.Wheels != null) ? x.Wheels.Equals(searchParams.Wheels) : true)
+                       .Where(x => (searchParams.CheckIn != null) ? x.CheckInTimeStamp.Date.Equals(searchParams.CheckIn.Value.Date) : true)
+                       .ToList();
+            return vehicles;
         }
 
         [HttpPost]
@@ -165,7 +202,7 @@ namespace Garage2.Controllers
                     vehicle.ParkingSpace = parking;
                     db.Vehicles.Add(vehicle);
                     db.SaveChanges();
-                    return RedirectToAction("Index", new { createdVehicleId = vehicle.Id, msg = $"Your {type.Type} has been parked successfully" });
+                    return RedirectToAction("Index", new { hasAddedVehicle = true, createdVehicleId = vehicle.Id, msg = $"Your {type.Type} has been parked successfully" });
                 }
                 else ModelState.AddModelError("", $"There is no space in the garage for your {type}");
             }
