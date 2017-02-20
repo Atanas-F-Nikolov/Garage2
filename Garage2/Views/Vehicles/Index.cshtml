@@ -7,6 +7,7 @@
 <h2>@Model.Title</h2>
 <h4>@Model.Message</h4>
 <hr />
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -58,7 +59,7 @@
 
 @if (Model.Vehicles.Count > 0)
 {
-    <table class="table">
+    <table class="table table-responsive colorTable">
         <tr>
             <th>
                 @Html.ActionLink(Html.DisplayNameFor(model => model.Vehicle.Owner).ToString(), "Index", "Vehicles", new { title = Model.Title, sort = (Model.Sort.Contains("Owner")? Model.Sort : "Owner"), RegNr = Model.SearchParams.RegNr, CheckIn = Model.SearchParams.CheckIn, Color = Model.SearchParams.Color, Brand = Model.SearchParams.Brand, Model = Model.SearchParams.Model, Wheels = Model.SearchParams.Wheels, Owner = Model.SearchParams.Owner, VehicleTypeId = Model.SearchParams.VehicleTypeId }, null)

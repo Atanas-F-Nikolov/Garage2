@@ -36,7 +36,7 @@
 
 @if (Model.Members.Count > 0)
 {
-    <table class="table">
+    <table class="table colorTable">
         <tr>
             <th>
                 @Html.ActionLink(Html.DisplayNameFor(model => model.Member.SocialSecurityNumber).ToString(), "OverView", "Members", new { SocialNr = Model.SearchParams.SocialNr, FirstName = Model.SearchParams.FirstName, LastName = Model.SearchParams.LastName, DateOfBirth = Model.SearchParams.DateOfBirth, sort = (Model.Sort.Contains("Social") ? Model.Sort : "SocialSecurityNumber") }, null)

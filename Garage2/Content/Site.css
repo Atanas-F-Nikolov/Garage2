@@ -58,6 +58,19 @@ textarea {
     background-color: #fafafa;
 }
 
+.colorTable tr:nth-child(1) {
+    background-color: #d3d3d3;
+    border-bottom: solid 2px #c1c0c0;
+}
+
+.colorTable tr:nth-child(odd) {
+    background-color: #ebebeb;
+}
+
+.colorTable tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
 #total {
     border-top: solid 2px #c1c0c0;
 }
