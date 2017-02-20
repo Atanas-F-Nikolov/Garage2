@@ -105,26 +105,56 @@ namespace Garage2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult BasicOverView(string regNr, int? VehicleTypeId)
+        public ActionResult BasicOverView(string regNr, int? vehicleTypeId)
         {
             List<VehicleDetailsViewModel> list = CreateViewModelList();
             if (Request.Form["show"] != null)
             {
                 ModelState.Clear();
+                regNr = "";
+                vehicleTypeId = null;
             }
             else
             {
                 list = list
                        .Where(x => (!string.IsNullOrWhiteSpace(regNr)) ? x.RegNumber.ToLower().Contains(regNr.ToLower()) : true)
-                       .Where(x => (VehicleTypeId != null) ? x.TypeId.Equals(VehicleTypeId) : true).ToList();
+                       .Where(x => (vehicleTypeId != null) ? x.TypeId.Equals(vehicleTypeId) : true).ToList();
             }
+
+            list = list.OrderByDescending(x => x.VehicleId).ToList();
+            ViewBag.Sort = "";
+            ViewBag.regNr = regNr;
+            ViewBag.VehicleType = vehicleTypeId;
             ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type");
             return View(list);
         }
 
-        public ActionResult BasicOverView()
+        public ActionResult BasicOverView(int? vehicleTypeId, string sort = "", string regNr = "")
         {
             List<VehicleDetailsViewModel> list = CreateViewModelList();
+            if (Request.Form["show"] != null)
+            {
+                ModelState.Clear();
+                sort = "";
+            }
+            else
+            {
+                list = list
+                       .Where(x => (!string.IsNullOrWhiteSpace(regNr)) ? x.RegNumber.ToLower().Contains(regNr.ToLower()) : true)
+                       .Where(x => (vehicleTypeId != null) ? x.TypeId.Equals(vehicleTypeId) : true).ToList();
+            }
+
+            sort = sort.Replace("_", " ");
+
+            if (!string.IsNullOrWhiteSpace(sort)) list = list.OrderBy(sort).ToList();
+            else list = list.OrderByDescending(x => x.VehicleId).ToList();
+
+            sort = (sort.Contains("descending") ? sort.Substring(0, sort.IndexOf(" ")) : sort + "_descending");
+
+            ViewBag.Sort = sort;
+            ViewBag.regNr = regNr;
+            ViewBag.VehicleType = vehicleTypeId;
+
             ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type");
             return View(list);
         }
@@ -138,6 +168,7 @@ namespace Garage2.Controllers
                             TypeId = x.Type.Id,
                             Owner = x.Owner.FirstName + " " + x.Owner.LastName,
                             ParkingTime = x.CheckInTimeStamp.ToString(),
+                            ParkTime = x.CheckInTimeStamp,
                             RegNumber = x.RegNumber,
                             Type = x.Type.Type
                         }
