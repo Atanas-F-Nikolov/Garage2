@@ -1,11 +1,13 @@
-﻿@{
+﻿@model Garage2.Models.FreeSpaces
+
+@{
     ViewBag.Title = "Home Page";
 }
 
 <div class="jumbotron text-center">
     <h1>Welcome to Garage 2</h1>
-    <h4>@ViewBag.RegularSpaces of @ViewBag.AllPlaces regular parking spaces left</h4>
-    <h4>@ViewBag.MotorSpaces parking spaces reserved for motorcycles left</h4>
+    <h4>@Model.RegularSpaces of @Model.AllSpaces regular parking spaces left</h4>
+    <h4>@Model.MotorSpaces parking spaces reserved for motorcycles left</h4>
 </div>
 
 <div class="row text-center">
