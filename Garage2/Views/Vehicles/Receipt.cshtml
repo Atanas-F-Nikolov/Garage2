@@ -1,0 +1,91 @@
+﻿@model Garage2.Models.Receipt
+
+@{
+    ViewBag.Title = "Receipt";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <img src="//placehold.it/170x40" class="img-rounded logo">
+            <address>
+                <strong>Garage 2</strong><br>
+            </address>
+        </div>
+        <div class="col-sm-8 well">
+            <table class="invoice-head">
+                <tbody>
+                    <tr>
+                        <td><strong>Date</strong></td>
+                        <td>@Model.CheckOutTimeStamp.ToShortDateString()</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Check-in time</strong></td>
+                        <td>@Model.vehicle.CheckInTimeStamp.ToShortDateString() / @Model.vehicle.CheckInTimeStamp.ToShortTimeString()</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Check-out time</strong></td>
+                        <td>@Model.CheckOutTimeStamp.ToShortDateString() / @Model.CheckOutTimeStamp.ToShortTimeString()</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Time duration</strong></td>
+                        <td>@Model.ParkingsPeriodInMin min</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Price</strong></td>
+                        <td>@Model.PricePerHour kr / h</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span8">
+            <h2>Receipt</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span8 invoice-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr id="table-head">
+                        <th>@Html.DisplayNameFor(x => x.vehicle.Owner)</th>
+                        <th>@Html.DisplayNameFor(x => x.vehicle.Type.Type)</th>
+                        <th>@Html.DisplayNameFor(x => x.vehicle.ParkingSpace)</th>
+                        <th>@Html.DisplayNameFor(x => x.vehicle.RegNumber)</th>
+                        <th>@Html.DisplayNameFor(x => x.vehicle.Model)</th>
+                        <th>@Html.DisplayNameFor(x => x.vehicle.Brand)</th>
+                        <th>@Html.DisplayNameFor(x => x.vehicle.Color)</th>
+                        <th>@Html.DisplayNameFor(x => x.vehicle.Wheels)</th>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(x => x.vehicle.Owner.FullName)</td>
+                        <td>@Html.DisplayFor(x => x.vehicle.Type.Type)</td>
+                        <td>
+                            @if (Model.vehicle.Type.Size > 1)
+                            {
+                                @Html.DisplayFor(model => model.vehicle.ParkingSpace) @:- @(Model.vehicle.ParkingSpace + Model.vehicle.Type.Size - 1)
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(model => model.vehicle.ParkingSpace)
+                            }
+                        </td>
+                        <td>@Html.DisplayFor(x => x.vehicle.RegNumber)</td>
+                        <td>@Html.DisplayFor(x => x.vehicle.Model)</td>
+                        <td>@Html.DisplayFor(x => x.vehicle.Brand)</td>
+                        <td>@Html.DisplayFor(x => x.vehicle.Color)</td>
+                        <td>@Html.DisplayFor(x => x.vehicle.Wheels)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p id="price">Total: @Model.TotalPrice kr</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span8 well invoice-thank">
+            <h5 style="text-align:center;">Thank You!</h5>
+        </div>
+    </div>
+    @Html.ActionLink("Back to list", "Index", new { msg = $"Your {Model.vehicle.Type.Type} has been successfully checked-out" }, null)
+</div>
