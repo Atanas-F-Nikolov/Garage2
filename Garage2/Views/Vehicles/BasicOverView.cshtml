@@ -4,8 +4,8 @@
     ViewBag.Title = "BasicOverView";
 }
 
-<h2>BasicOverView</h2>
-
+<h2>List of Vehicles</h2>
+<hr />
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -26,44 +26,51 @@
         </div>
     </div>
 }
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Owner)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Type)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RegNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ParkingTime)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+@if (Model.Count() > 0)
+{
+    <table class="table">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Owner)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ParkingTime)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.VehicleId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.VehicleId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.VehicleId })
-            </td>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Owner).ToString(), "BasicOverView", new { vehicleTypeId = ViewBag.VehicleType, regNr = ViewBag.regNr, sort = (ViewBag.Sort.Contains("Owner") ? ViewBag.Sort : "Owner") }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Type).ToString(), "BasicOverView", new { vehicleTypeId = ViewBag.VehicleType, regNr = ViewBag.regNr, sort = (ViewBag.Sort.Contains("Type") ? ViewBag.Sort : "Type") }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.RegNumber).ToString(), "BasicOverView", new { vehicleTypeId = ViewBag.VehicleType, regNr = ViewBag.regNr, sort = (ViewBag.Sort.Contains("RegNumber") ? ViewBag.Sort : "RegNumber") }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.ParkingTime).ToString(), "BasicOverView", new { vehicleTypeId = ViewBag.VehicleType, regNr = ViewBag.regNr, sort = (ViewBag.Sort.Contains("ParkTime") ? ViewBag.Sort : "ParkTime") }, null)
+            </th>
+            <th></th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Owner)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RegNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParkingTime)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.VehicleId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.VehicleId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.VehicleId })
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+else
+{
+    <h3>Could not find any vehicles that matched your search</h3>
+}

@@ -13,7 +13,6 @@
 
     <div class="container form-container">
         <div class="row">
-            '
             @Html.HiddenFor(x => x.Sort)
             <div class="col-sm-6 col-md-4">
                 @Html.Label("SocialSecurityNumber")
@@ -34,52 +33,62 @@
         </div>
     </div>
 }
-<table class="table">
-    <tr>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Member.SocialSecurityNumber).ToString(), "OverView", "Members", new { SocialNr = Model.SearchParams.SocialNr, FirstName = Model.SearchParams.FirstName, LastName = Model.SearchParams.LastName, DateOfBirth = Model.SearchParams.DateOfBirth, sort = (Model.Sort.Contains("Social") ? Model.Sort : "SocialSecurityNumber") }, null)
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Member.FirstName).ToString(), "OverView", "Members", new { SocialNr = Model.SearchParams.SocialNr, FirstName = Model.SearchParams.FirstName, LastName = Model.SearchParams.LastName, DateOfBirth = Model.SearchParams.DateOfBirth, sort = (Model.Sort.Contains("First") ? Model.Sort : "FirstName") }, null)
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Member.LastName).ToString(), "OverView", "Members", new { SocialNr = Model.SearchParams.SocialNr, FirstName = Model.SearchParams.FirstName, LastName = Model.SearchParams.LastName, DateOfBirth = Model.SearchParams.DateOfBirth, sort = (Model.Sort.Contains("Last") ? Model.Sort : "LastName") }, null)
-        </th>
-        <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Member.DateOfBirth).ToString(), "OverView", "Members", new { SocialNr = Model.SearchParams.SocialNr, FirstName = Model.SearchParams.FirstName, LastName = Model.SearchParams.LastName, DateOfBirth = Model.SearchParams.DateOfBirth, sort = (Model.Sort.Contains("Birth") ? Model.Sort : "DateOfBirth") }, null)
-        </th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model.Members)
-    {
-        if (Model.HasAddedMember.Equals(true))
+@if (Model.Members.Count > 0)
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Member.SocialSecurityNumber).ToString(), "OverView", "Members", new { SocialNr = Model.SearchParams.SocialNr, FirstName = Model.SearchParams.FirstName, LastName = Model.SearchParams.LastName, DateOfBirth = Model.SearchParams.DateOfBirth, sort = (Model.Sort.Contains("Social") ? Model.Sort : "SocialSecurityNumber") }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Member.FirstName).ToString(), "OverView", "Members", new { SocialNr = Model.SearchParams.SocialNr, FirstName = Model.SearchParams.FirstName, LastName = Model.SearchParams.LastName, DateOfBirth = Model.SearchParams.DateOfBirth, sort = (Model.Sort.Contains("First") ? Model.Sort : "FirstName") }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Member.LastName).ToString(), "OverView", "Members", new { SocialNr = Model.SearchParams.SocialNr, FirstName = Model.SearchParams.FirstName, LastName = Model.SearchParams.LastName, DateOfBirth = Model.SearchParams.DateOfBirth, sort = (Model.Sort.Contains("Last") ? Model.Sort : "LastName") }, null)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Member.DateOfBirth).ToString(), "OverView", "Members", new { SocialNr = Model.SearchParams.SocialNr, FirstName = Model.SearchParams.FirstName, LastName = Model.SearchParams.LastName, DateOfBirth = Model.SearchParams.DateOfBirth, sort = (Model.Sort.Contains("Birth") ? Model.Sort : "DateOfBirth") }, null)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Members)
         {
-            @:<tr class="success">
-            Model.HasAddedMember = false;
-        }
-        else
-        {
-            @:<tr>
-        }
-        <td>
-            @Html.DisplayFor(modelItem => item.SocialSecurityNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateOfBirth)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-        </td>
-        @:</tr>
+            if (Model.HasAddedMember.Equals(true))
+            {
+                @:<tr class="success">
+                Model.HasAddedMember = false;
+            }
+            else
+            {
+                @:<tr>
+            }
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SocialSecurityNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateOfBirth)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    </td>
+                    @:</tr>
+                }
+
+            </table>
+       }
+else
+{
+    <h3>Could not find any members that matched your search</h3>
 }
 
-</table>
+
