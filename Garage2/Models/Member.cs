@@ -31,6 +31,7 @@ namespace Garage2.Models
 
         [DisplayName("Date of birth")]
         [Required(ErrorMessage = "Please enter a date of birth")]
+        [DisplayFormat(DataFormatString = "{0:dd'/'MM'/'yyyy}")]
         public DateTime DateOfBirth { get; set; }
 
 

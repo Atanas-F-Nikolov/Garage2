@@ -12,7 +12,7 @@
             <th>Number of wheels</th>
             <th>Parking time [min]</th>
             <th>Parking price [kr]</th>
-         </tr>
+        </tr>
 
         @foreach (var item in Model.GroupByTypeStatistics)
         {
@@ -34,7 +34,7 @@
                 </td>
             </tr>
         }
-        
+
         <tr id="total">
             <th>Total</th>
             <th>@Html.DisplayFor(model => model.TotalVehiclesNumber)</th>
@@ -42,5 +42,5 @@
             <th>@Html.DisplayFor(model => model.TotalParkingTime) min </th>
             <th>@Html.DisplayFor(model => model.TotalParkingPrice) kr</th>
         </tr>
-     </table>
+    </table>
 </div>

@@ -368,21 +368,21 @@ namespace Garage2.Controllers
             List<Vehicle> vehicleList = db.Vehicles.ToList();
             var StatistiscInAGroup = vehicleList
                 .Where(v => v != null)
-                .GroupBy(v => v.Type)
+                .GroupBy(v => v.Type.Type)
                 .OrderBy(v => v.Key)
                 .Select(t => new GroupByTypeStatistics
                 {
                     VehiclesNumberInAGroup = t.Count(),
-                    VehicleGroup = t.Key,
+                    //VehicleGroup = t.Key,
                     WheelsNumberInAGroup = t.Sum(x => x.Wheels),
                     ParkingTimeInAGroup = t.Sum(x => Math.Round(DateTime.Now.Subtract(x.CheckInTimeStamp).TotalMinutes)),
                     ParkingPriceInAGroup = t.Sum(x => Math.Ceiling((pricePerHour / 60) * Math.Round(DateTime.Now.Subtract(x.CheckInTimeStamp).TotalMinutes)))
                 });
 
             var statistics = new Statistics();
-            statistics.GroupByDiffStatistics = StatistiscInAGroup.ToList();
+            statistics.GroupByTypeStatistics = StatistiscInAGroup.ToList();
 
-            foreach (var item in statistics.GroupByDiffStatistics)
+            foreach (var item in statistics.GroupByTypeStatistics)
             {
                 statistics.TotalVehiclesNumber += item.VehiclesNumberInAGroup;
                 statistics.TotalWheelsNumber += item.WheelsNumberInAGroup;

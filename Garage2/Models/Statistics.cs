@@ -8,7 +8,7 @@ namespace Garage2.Models
 {
     public class Statistics
     {
-        public List<GroupByTypeStatistics> GroupByDiffStatistics { get; set; }
+        public List<GroupByTypeStatistics> GroupByTypeStatistics { get; set; }
 
         public int TotalVehiclesNumber { get; set; }
         public int TotalWheelsNumber { get; set; }

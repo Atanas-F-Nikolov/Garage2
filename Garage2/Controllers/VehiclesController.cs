@@ -16,6 +16,7 @@ namespace Garage2.Controllers
         private Garage2Context db = new Garage2Context();
         private int garageSize = 30;
         private string motorCycle = "Motorcycle";
+        private double pricePerHour = 100;
 
         // GET: Vehicles
         public ActionResult Index(string msg, bool hasAddedVehicle = false, string title = "List of vehicles", string sort = "", [Bind(Include = "RegNr,CheckIn,Color,Brand,Model,Wheels,Owner,VehicleTypeId")] VehicleDetailSearchParams searchParams = null)
@@ -391,12 +392,51 @@ namespace Garage2.Controllers
         // POST: Vehicles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Receipt(int id)
         {
             Vehicle vehicle = db.Vehicles.Find(id);
-            db.Vehicles.Remove(vehicle);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            Receipt receipt = new Receipt();
+            receipt.PricePerHour = pricePerHour;
+            receipt.vehicle = vehicle;
+            var parkingPeriod = receipt.CheckOutTimeStamp.Subtract(vehicle.CheckInTimeStamp);
+            receipt.ParkingsPeriodInMin = Math.Round(parkingPeriod.TotalMinutes);
+            receipt.TotalPrice = Math.Ceiling((receipt.PricePerHour / 60) * receipt.ParkingsPeriodInMin);
+
+            //db.Vehicles.Remove(vehicle);
+            //db.SaveChanges();
+
+            return View("Receipt", receipt);
+        }
+
+        public ActionResult Statistics()
+        {
+            List<Vehicle> vehicleList = db.Vehicles.ToList();
+            var StatistiscInAGroup = vehicleList
+                .Where(v => v != null)
+                .GroupBy(v => v.Type)
+                .OrderBy(v => v.Key)
+                .Select(t => new GroupByTypeStatistics
+                {
+                    VehiclesNumberInAGroup = t.Count(),
+                    VehicleGroup = t.Key,
+                    WheelsNumberInAGroup = t.Sum(x => x.Wheels),
+                    ParkingTimeInAGroup = t.Sum(x => Math.Round(DateTime.Now.Subtract(x.CheckInTimeStamp).TotalMinutes)),
+                    ParkingPriceInAGroup = t.Sum(x => Math.Ceiling((pricePerHour / 60) * Math.Round(DateTime.Now.Subtract(x.CheckInTimeStamp).TotalMinutes)))
+                });
+
+            var statistics = new Statistics();
+            statistics.GroupByTypeStatistics = StatistiscInAGroup.ToList();
+
+            foreach (var item in statistics.GroupByTypeStatistics)
+            {
+                statistics.TotalVehiclesNumber += item.VehiclesNumberInAGroup;
+                statistics.TotalWheelsNumber += item.WheelsNumberInAGroup;
+                statistics.TotalParkingTime += item.ParkingTimeInAGroup;
+                statistics.TotalParkingPrice += item.ParkingPriceInAGroup;
+            }
+
+            ViewBag.PricePerHour = pricePerHour;
+            return View(statistics);
         }
 
         protected override void Dispose(bool disposing)
