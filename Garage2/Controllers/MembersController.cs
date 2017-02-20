@@ -69,7 +69,7 @@ namespace Garage2.Controllers
 
             list = SortList(ref sort, list);
             
-            return View(new MembersOverViewViewModel { Members = list, SearchParams = searchParams, Sort = sort});
+            return View(new MembersOverViewViewModel { Title = "List of members", Members = list, SearchParams = searchParams, Sort = sort});
         }
 
         private static List<Member> SearchInList(MemberSearchParams searchParams, List<Member> list)
