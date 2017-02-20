@@ -5,7 +5,7 @@
 }
 
 <div class="jumbotron text-center">
-    <h1>Welcome to Garage 2</h1>
+    <h1>Welcome to Garage 2.5</h1>
     <h4>@Model.RegularSpaces of @Model.AllSpaces regular parking spaces left</h4>
     <h4>@Model.MotorSpaces parking spaces reserved for motorcycles left</h4>
 </div>
@@ -13,14 +13,15 @@
 <div class="row text-center">
     <div class="col-md-4">
         <h2>See all vehicles</h2>
-        <p><a class="btn btn-default" href="http://localhost:53122/Garage/OverView">See all vehicles &raquo;</a></p>
+        @Html.ActionLink(HttpUtility.HtmlDecode("See all vehicles &raquo;"), "Index", "Vehicles", null, new { @class = "btn btn-default" })
     </div>
+    
     <div class="col-md-4">
         <h2>Check-in a vehicle</h2>
-        <p><a class="btn btn-default" href="http://localhost:53122/Garage/Create">Check-in &raquo;</a></p>
+        @Html.ActionLink(HttpUtility.HtmlDecode("Check-in a vehicle &raquo;"), "Create", "Vehicles", null, new { @class = "btn btn-default" })
     </div>
     <div class="col-md-4">
         <h2>Check-out a vehicle</h2>
-        <p><a class="btn btn-default" href="http://localhost:53122/Garage/OverView?msg=Select%20vehicle%20to%20check-out">Check-out &raquo;</a></p>
+        @Html.ActionLink(HttpUtility.HtmlDecode("Check-out a vehicle &raquo;"), "Index", "Vehicles", new { title = "Select vehicle to check-out" }, new { @class = "btn btn-default" })
     </div>
 </div>
