@@ -398,12 +398,15 @@ namespace Garage2.Controllers
             Receipt receipt = new Receipt();
             receipt.PricePerHour = pricePerHour;
             receipt.vehicle = vehicle;
+            receipt.Size = vehicle.Type.Size;
+            receipt.Owner = vehicle.Owner.FullName;
+            receipt.Type = vehicle.Type.Type;
             var parkingPeriod = receipt.CheckOutTimeStamp.Subtract(vehicle.CheckInTimeStamp);
             receipt.ParkingsPeriodInMin = Math.Round(parkingPeriod.TotalMinutes);
             receipt.TotalPrice = Math.Ceiling((receipt.PricePerHour / 60) * receipt.ParkingsPeriodInMin);
 
-            //db.Vehicles.Remove(vehicle);
-            //db.SaveChanges();
+            db.Vehicles.Remove(vehicle);
+            db.SaveChanges();
 
             return View("Receipt", receipt);
         }

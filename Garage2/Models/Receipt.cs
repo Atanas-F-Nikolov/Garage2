@@ -16,6 +16,10 @@ namespace Garage2.Models
 
         public Vehicle vehicle { get; set; }
 
+        public string Owner { get; set; }
+        public int Size { get; set; }
+        public string Type { get; set; }
+
         public double PricePerHour { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd'/'MM'/'yy, HH:mm}")]

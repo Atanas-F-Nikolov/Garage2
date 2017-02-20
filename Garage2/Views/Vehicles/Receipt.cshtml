@@ -59,12 +59,12 @@
                         <th>@Html.DisplayNameFor(x => x.vehicle.Wheels)</th>
                     </tr>
                     <tr>
-                        <td>@Html.DisplayFor(x => x.vehicle.Owner.FullName)</td>
-                        <td>@Html.DisplayFor(x => x.vehicle.Type.Type)</td>
+                        <td>@Html.DisplayFor(x => x.Owner)</td>
+                        <td>@Html.DisplayFor(x => x.Type)</td>
                         <td>
-                            @if (Model.vehicle.Type.Size > 1)
+                            @if (Model.Size > 1)
                             {
-                                @Html.DisplayFor(model => model.vehicle.ParkingSpace) @:- @(Model.vehicle.ParkingSpace + Model.vehicle.Type.Size - 1)
+                                @Html.DisplayFor(model => model.vehicle.ParkingSpace) @:- @(Model.vehicle.ParkingSpace + Model.Size - 1)
                             }
                             else
                             {
@@ -87,5 +87,5 @@
             <h5 style="text-align:center;">Thank You!</h5>
         </div>
     </div>
-    @Html.ActionLink("Back to list", "Index", new { msg = $"Your {Model.vehicle.Type.Type} has been successfully checked-out" }, null)
+    @Html.ActionLink("Back to list", "Index", new { msg = $"Your {Model.Type} has been successfully checked-out" }, null)
 </div>
