@@ -351,7 +351,7 @@ namespace Garage2.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.MemberId = new SelectList(db.Members, "Id", "FirstName", vehicle.MemberId);
+            ViewBag.MemberId = new SelectList(db.Members, "Id", "FullName", vehicle.MemberId);
             ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type", vehicle.VehicleTypeId);
             return View(vehicle);
         }
@@ -369,7 +369,7 @@ namespace Garage2.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.MemberId = new SelectList(db.Members, "Id", "FirstName", vehicle.MemberId);
+            ViewBag.MemberId = new SelectList(db.Members, "Id", "FullName", vehicle.MemberId);
             ViewBag.VehicleTypeId = new SelectList(db.VehicleTypes, "Id", "Type", vehicle.VehicleTypeId);
             return View(vehicle);
         }
