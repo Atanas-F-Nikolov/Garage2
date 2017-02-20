@@ -18,9 +18,45 @@ namespace Garage2.Controllers
 
         public ActionResult Home()
         {
-            //GetFreeSpaces();
-            ViewBag.AllPlaces = garageSize;
-            return View();
+            return View(GetFreeSpaces());
+        }
+
+        private FreeSpaces GetFreeSpaces()
+        {
+            var freeSpacesDetails = new FreeSpaces();
+            freeSpacesDetails.AllSpaces = garageSize;
+
+            var freeSpaces = 0;
+
+            var spaces = db.Vehicles
+                .Select(x => new
+                {
+                    space = x.ParkingSpace,
+                    size = x.Type.Size
+                }).Distinct().ToList();
+
+            var count = garageSize;
+            foreach (var item in spaces) count -= item.size;
+
+            if (count < 0) { freeSpacesDetails.RegularSpaces = 0; }
+            else { freeSpacesDetails.RegularSpaces = count; }
+
+            freeSpaces = count;
+            count = 0;
+
+            var motorcycleSpaces = db.Vehicles.Where(x => x.Type.Type == "Motorcycle")
+                .GroupBy(g => g.ParkingSpace)
+                .Select(y => new { Space = y.Key, Count = y.Count() }).ToList();
+
+            foreach (var item in motorcycleSpaces)
+            {
+                if (item.Count < 3) count += (3 - item.Count);
+            }
+
+            freeSpaces += count;
+            freeSpacesDetails.MotorSpaces = count;
+
+            return freeSpacesDetails;
         }
 
         // GET: Garage
